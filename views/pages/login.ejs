@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("../patrials/head") %>
+
+    <body class="desfocar">
+        <center>
+            <div class="page-box">
+                <br><br><br><br>
+                <h1>LOGAR</h1>
+                <% if (mensagem) { %>
+                    <p style="color:#000000;">
+                        <%= mensagem %>
+                    </p>
+                    <% } %>
+                        <main>
+                            <form action="/login" method="POST" class="formItens">
+                                <table>
+                                    <tr>
+                                        <td><input type="email" name="email" placeholder="Email" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="password" name="senha" placeholder="Senha" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="campanha">ESCOLHA A CAMPANHA:</label>
+                                            <select name="campanha" id="campanha" required>
+                                                <option value="">ESCOLHA</option>
+                                                <option value="agasalho">AGASALHO</option>
+                                                <option value="brinquedo">BRINQUEDO</option>
+                                                <option value="alimento">ALIMENTO</option>
+                                                <option value="racao">RAÇÃO PARA PETS</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <button type="submit">CONFIRMAR</button><br><br>
+                            </form>
+                        </main>
+            </div>
+            <a href="/"><button type="submit">VOLTAR</button></a><br><br>
+        </center>
+        <%- include("../patrials/footer") %>
+    </body>
+
+</html>

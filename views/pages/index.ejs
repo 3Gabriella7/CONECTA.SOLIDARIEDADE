@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("../patrials/head") %>
+
+    <body>
+        <% if (nome) { %>
+            <div class="nome-container">
+                <p style="color:#ffffff; " class="Nome Logado">
+                    <%= nome %>
+                </p>
+                <a href="/logout">
+                    <button class="sair-btn">SAIR</button>
+                </a>
+            </div>
+            <% } %>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <center>
+                    <a href="/cadastro"><button>CADASTRAR</button></a>
+                    <a href="/login"><button>LOGAR</button></a>
+                    <a href="/info"><button>SOBRE O SITE</button></a>
+                    <a href="/camp"><button>CAMPANHAS PARTICIPANTES</button></a>
+                </center>
+                <%- include("../patrials/footer") %>
+    </body>
+
+</html>
