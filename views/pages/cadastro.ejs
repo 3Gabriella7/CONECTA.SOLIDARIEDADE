@@ -10,59 +10,72 @@
                 <h1>CADASTRE-SE
                 </h1>
                 <main>
-                    <form action="/cadastro" method="POST" class="formItens">
-                        <table>
-                            <tr>
-                                <td><input type="email" name="email" placeholder="Email" required></td>
-                            </tr>
-                            <tr>
-                                <td><input type="password" name="senha" placeholder="Senha" required></td>
-                            </tr>
-                            <tr>
-                                <td><input type="password" name="confirmarsenha" placeholder="Confirmar Senha" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label>
-                                        <input type="radio" name="tipo_usuario" value="aluno" required> ALUNO
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="tipo_usuario" value="docente" required> DOCENTE
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="codigo_da_sala">CÓDIGO DA SALA:</label>
-                                    <select name="codigo_da_sala" id="codigo_da_sala" required>
-                                        <option value="">SELECIONE</option>
-                                        <option value="I1HS">I1HS</option>
-                                        <option value="I2HSA">I2HSA</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                        <option value="13">13</option>
-                                        <option value="14">14</option>
-                                        <option value="15">15</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+                    <% if (mensagem) { %>
+                        <p style="color: rgb(0, 0, 0);">
+                            <%= mensagem %>
+                        </p>
+                        <% } %>
+                            <form action="/cadastro" method="POST" class="formItens">
+                                <table>
+                                    <tr>
+                                        <td><input type="email" name="email" placeholder="Email" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="password" name="senha" placeholder="Senha" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="password" name="confirmarsenha" placeholder="Confirmar Senha"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>
+                                                <input type="radio" name="tipo_usuario" value="aluno" required> ALUNO
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="tipo_usuario" value="docente" required>
+                                                DOCENTE
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="codigo_da_sala">CÓDIGO DA SALA:</label>
+                                            <select name="codigo_da_sala" id="codigo_da_sala" required>
+                                                <option value="">SELECIONE</option>
+                                                <option value="I1HS">I1HS</option>
+                                                <option value="I2HSA">I2HSA</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="submit">CADASTRAR</button>
+                                            <a href="/login">
+                                                <button type="button">JÁ TENHO CADASTRO</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
                 </main>
             </div>
-            <button type="submit">CADASTRAR</button>
-            <a href="/login"><button type="submit">JÁ TENHO CADASTRO</button></a><br><br>
-            <a href="/"><button type="submit">VOLTAR</button></a>
+            <a href="/"><button type="submit">VOLTAR</button></a><br><br>
         </center>
         <%- include("../patrials/footer") %>
     </body>
