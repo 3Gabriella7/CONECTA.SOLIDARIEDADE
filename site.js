@@ -31,7 +31,7 @@ db.serialize(() => {
     db.run(
         "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
     );
-    //db.run("DELETE FROM doar WHERE id = 4");
+    //db.run("DELETE FROM cadastro WHERE id = 3");
     //db.run("DELETE FROM login");
 });
 
@@ -55,31 +55,34 @@ app.get("/", (req, res) => {
 })
 
 app.get("/cadastro", (req, res) => {
-    res.render("pages/cadastro", { req });
+    const mensagem = req.query.mensagem || "";
+    res.render("pages/cadastro", { req, mensagem });
 });
 app.post("/cadastro", (req, res) => {
-    console.log("POST /cadastro");
-    console.log(JSON.stringify(req.body));
+    const { email, senha, confirmarsenha, tipo_usuario, codigo_da_sala } = req.body;
 
-    const { email, senha, confirmarsenha, tipo_usuario } = req.body;
-
-    if (!email || !senha || !confirmarsenha || !tipo_usuario) {
-        return res.redirect("/cadastro?mensagem=Preencha todos os campos");
+    if (!email || !senha || !confirmarsenha || !tipo_usuario || !codigo_da_sala) {
+        return res.render("pages/cadastro", { mensagem: "Preencha todos os campos", req });
     }
 
     if (senha !== confirmarsenha) {
-        return res.redirect("/cadastro?mensagem=As senhas não batem");
+        return res.render("pages/cadastro", { mensagem: "As senhas não batem", req });
     }
 
-    // salva também no cadastro (com tipo_usuario)
-    const insertCadastro = "INSERT INTO cadastro (email, senha, confirmarsenha, tipo_usuario) VALUES (?, ?, ?, ?)";
-    db.run(insertCadastro, [email, senha, confirmarsenha, tipo_usuario], function (err) {
+    // Verifica se o email já existe
+    const queryCheck = "SELECT * FROM cadastro WHERE email = ?";
+    db.get(queryCheck, [email], (err, row) => {
         if (err) throw err;
 
-        // e no login (somente email/senha)
-        const insertLogin = "INSERT INTO login (email, senha) VALUES (?, ?)";
-        db.run(insertLogin, [email, senha], function (err2) {
-            if (err2) throw err2;
+        if (row) {
+            // Email já existe, não cadastra
+            return res.render("pages/cadastro", { mensagem: "Email já cadastrado", req });
+        }
+
+        // Se não existir, insere o usuário
+        const insertCadastro = "INSERT INTO cadastro (email, senha, confirmarsenha, tipo_usuario, codigo_da_sala) VALUES (?, ?, ?, ?, ?)";
+        db.run(insertCadastro, [email, senha, confirmarsenha, tipo_usuario, codigo_da_sala], function (err) {
+            if (err) throw err;
             console.log("Novo usuário cadastrado:", email, tipo_usuario);
             return res.redirect("/login?mensagem=Cadastro realizado com sucesso");
         });
@@ -90,30 +93,55 @@ app.get("/login", (req, res) => {
     const mensagem = req.query.mensagem || "";
     res.render("pages/login", { mensagem });
 });
+
 app.post("/login", (req, res) => {
-    console.log("POST /login");
-    console.log(JSON.stringify(req.body));
+    const { email, senha, doar } = req.body;
 
-    const { email, senha, campanha } = req.body; // agora inclui campanha
-
-    if (!email || !senha || !campanha) {
+    if (!email || !senha || !doar) {
         return res.redirect("/login?mensagem=Preencha todos os campos");
     }
 
-    const query = "SELECT * FROM login WHERE email=? AND senha=?";
+    const query = "SELECT * FROM cadastro WHERE email=? AND senha=?";
     db.get(query, [email, senha], (err, row) => {
         if (err) throw err;
 
-        console.log(`row: ${JSON.stringify(row)}`);
         if (row) {
             req.session.loggedin = true;
             req.session.email = row.email;
             req.session.usuario_id = row.id;
+            req.session.tipo_usuario = row.tipo_usuario;
 
-            // redireciona direto para a campanha escolhida
-            return res.redirect("/campanha/" + campanha);
+            // padroniza o tipo da campanha para minúsculas
+            const tipoCampanha = doar.toLowerCase();
+
+            if (row.tipo_usuario === "docente") {
+                // docente vai para página de campanha
+                return res.redirect("/campanha/" + tipoCampanha);
+            } else {
+                // aluno vai direto para o ranking da campanha
+                return res.redirect("/ranking_" + tipoCampanha);
+            }
         } else {
             return res.redirect("/login?mensagem=Usuário ou senha inválidos");
+        }
+    });
+});
+
+app.get("/campanha/:tipo", (req, res) => {
+    const tipo = req.params.tipo.toLowerCase();
+    const usuario = req.session.usuario_id;
+
+    if (!usuario) return res.redirect("/login");
+
+    db.get("SELECT tipo_usuario FROM cadastro WHERE id=?", [usuario], (err, row) => {
+        if (err) throw err;
+
+        if (row.tipo_usuario === "docente") {
+            // docente vê a campanha e pode doar ou ver ranking
+            res.render("pages/campanha", { tipo });
+        } else {
+            // aluno vai direto para o ranking da campanha
+            res.redirect("/ranking_" + tipo);
         }
     });
 });
@@ -198,7 +226,7 @@ app.post("/doar/racao", (req, res) => {
     });
 });
 
-app.get("/conclusa1", (req, res) => {
+app.get("/conclusao1", (req, res) => {
     console.log("GET /conclusao1")
     res.render("pages/conclusao1");
 })
@@ -208,12 +236,11 @@ app.get("/conclusao2", (req, res) => {
 })
 app.get("/conclusao3", (req, res) => {
     console.log("GET /conclusao3")
-    res.render("pages/conclusao2");
+    res.render("pages/conclusao3");
 })
 
-// RANKING 1 - AGASALHO
-app.get("/ranking1", (req, res) => {
-    console.log("GET /ranking1");
+// RANKING AGASALHO
+app.get("/ranking_agasalho", (req, res) => {
     const query = `
         SELECT usuario_id,
                SUM(item_doado * quantidade) AS pontuacao_total,
@@ -223,16 +250,14 @@ app.get("/ranking1", (req, res) => {
         GROUP BY usuario_id
         ORDER BY pontuacao_total DESC
     `;
-    db.all(query, [], (err, row) => {
+    db.all(query, [], (err, rows) => {
         if (err) throw err;
-        console.log(JSON.stringify(row));
-        res.render("pages/ranking", { titulo: "Ranking Agasalho", dados: row, req });
+        res.render("pages/ranking", { titulo: "Ranking Agasalho", dados: rows, req });
     });
 });
 
-// RANKING 2 - BRINQUEDO
-app.get("/ranking2", (req, res) => {
-    console.log("GET /ranking2");
+// RANKING BRINQUEDO
+app.get("/ranking_brinquedo", (req, res) => {
     const query = `
         SELECT usuario_id,
                SUM(item_doado * quantidade) AS pontuacao_total,
@@ -242,16 +267,14 @@ app.get("/ranking2", (req, res) => {
         GROUP BY usuario_id
         ORDER BY pontuacao_total DESC
     `;
-    db.all(query, [], (err, row) => {
+    db.all(query, [], (err, rows) => {
         if (err) throw err;
-        console.log(JSON.stringify(row));
-        res.render("pages/ranking", { titulo: "Ranking Brinquedo", dados: row, req });
+        res.render("pages/ranking", { titulo: "Ranking Brinquedo", dados: rows, req });
     });
 });
 
-// RANKING 3 - ALIMENTO
-app.get("/ranking3", (req, res) => {
-    console.log("GET /ranking3");
+// RANKING ALIMENTO
+app.get("/ranking_alimento", (req, res) => {
     const query = `
         SELECT usuario_id,
                SUM(item_doado * quantidade) AS pontuacao_total,
@@ -261,16 +284,14 @@ app.get("/ranking3", (req, res) => {
         GROUP BY usuario_id
         ORDER BY pontuacao_total DESC
     `;
-    db.all(query, [], (err, row) => {
+    db.all(query, [], (err, rows) => {
         if (err) throw err;
-        console.log(JSON.stringify(row));
-        res.render("pages/ranking", { titulo: "Ranking Alimento", dados: row, req });
+        res.render("pages/ranking", { titulo: "Ranking Alimento", dados: rows, req });
     });
 });
 
-// RANKING 4 - RAÇÃO
-app.get("/ranking4", (req, res) => {
-    console.log("GET /ranking4");
+// RANKING RAÇÃO
+app.get("/ranking_racao", (req, res) => {
     const query = `
         SELECT usuario_id,
                SUM(item_doado * quantidade) AS pontuacao_total,
@@ -280,16 +301,20 @@ app.get("/ranking4", (req, res) => {
         GROUP BY usuario_id
         ORDER BY pontuacao_total DESC
     `;
-    db.all(query, [], (err, row) => {
+    db.all(query, [], (err, rows) => {
         if (err) throw err;
-        console.log(JSON.stringify(row));
-        res.render("pages/ranking", { titulo: "Ranking Ração", dados: row, req });
+        res.render("pages/ranking", { titulo: "Ranking Ração", dados: rows, req });
     });
 });
 
 app.get("/info", (req, res) => {
     console.log("GET /info")
     res.render("pages/info");
+})
+
+app.get("/cp", (req, res) => {
+    console.log("GET /cp")
+    res.render("pages/cp");
 })
 
 app.get("/logout", (req, res) => {

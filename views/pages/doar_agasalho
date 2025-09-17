@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("../patrials/head") %>
+
+    <body class="desfocar">
+        <center>
+            <div class="page-box">
+                <br><br>
+                <h1>Doar</h1>
+                <main>
+                    <form action="/doar" method="POST" class="formItens">
+                        <table>
+                            <tr>
+                                <td><img src='./static/tabeladoação2.png' /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="item_doado" required>
+                                        <option value="" disabled selected>Selecione os Pontos do Item</option>
+                                        <option value="1">1 Ponto</option>
+                                        <option value="2">2 Pontos</option>
+                                        <option value="5">5 Pontos</option>
+                                        <option value="10">10 Pontos</option>
+                                        <option value="20">20 Pontos</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="number" name="quantidade" placeholder="Quantidade" min="1" max="99"
+                                        required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="date" name="data" placeholder="Data" required></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="codigo_da_sala" placeholder="Código da Sala" required></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="docente" placeholder="Docente" required></td>
+                            </tr>
+                        </table>
+                        <button type="submit">CONFIRMAR</button><br><br>
+                    </form>
+                </main>
+            </div>
+            <a href="/"><button type="submit">VOLTAR</button></a><br><br>
+        </center>
+        <%- include("../patrials/footer") %>
+    </body>
+
+</html>
