@@ -10,7 +10,7 @@
                 <h1>Doar</h1>
                 <main>
                     <form action="/doar" method="POST" class="formItens">
-                        <table>
+                        <table border="1">
                             <tr>
                                 <td><img src='./static/tabeladoação2.png' /></td>
                             </tr>

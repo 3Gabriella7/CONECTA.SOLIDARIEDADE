@@ -13,8 +13,8 @@ const PORT = 8000; //configura a porta TCP do express
 //conexão com oo BD
 const db = new sqlite3.Database("doacoes.db");
 db.serialize(() => {
-    db.run(
-        "CREATE TABLE IF NOT EXISTS cadastro (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT, confirmarsenha TEXT, tipo_usuario TEXT)"
+
+    db.run("CREATE TABLE IF NOT EXISTS cadastro (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT, confirmarsenha TEXT, tipo_usuario TEXT, codigo_da_sala TEXT)"
     );
     db.run(
         "CREATE TABLE IF NOT EXISTS login (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT)"
@@ -32,7 +32,7 @@ db.serialize(() => {
         "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
     );
     //db.run("DELETE FROM cadastro WHERE id = 3");
-    //db.run("DELETE FROM login");
+    //db.run("DELETE FROM cadastro");
 });
 
 //configura a rota '/static' para a pasta '__dirname/static' do seu servidor
