@@ -11,6 +11,7 @@ app.use(express.json());
 const PORT = 8000; //configura a porta TCP do express
 
 //conexão com oo BD
+// @ts-ignore
 const db = new sqlite3.Database("doacoes.db");
 db.serialize(() => {
 
@@ -31,8 +32,7 @@ db.serialize(() => {
     db.run(
         "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
     );
-    //db.run("DELETE FROM cadastro WHERE id = 3");
-    //db.run("DELETE FROM login");
+   
     //db.run("DELETE FROM cadastro WHERE id = 3");
     //db.run("DELETE FROM cadastro");
 });
