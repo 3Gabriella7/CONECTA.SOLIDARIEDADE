@@ -13,8 +13,8 @@ const PORT = 8000; //configura a porta TCP do express
 //conexão com oo BD
 const db = new sqlite3.Database("doacoes.db");
 db.serialize(() => {
-    db.run(
-        "CREATE TABLE IF NOT EXISTS cadastro (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT, confirmarsenha TEXT, tipo_usuario TEXT)"
+
+    db.run("CREATE TABLE IF NOT EXISTS cadastro (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT, confirmarsenha TEXT, tipo_usuario TEXT, codigo_da_sala TEXT)"
     );
     db.run(
         "CREATE TABLE IF NOT EXISTS login (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT)"

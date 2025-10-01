@@ -29,7 +29,8 @@ body.desfocar::before {
     z-index: -1;
 }
 
-h1,h2,h3,h4 {
+/* borda dos titulos */
+h1,h2,h3,h4 { 
     display: inline-block;
     color: #ff6600;
     margin-bottom: 15px;
@@ -49,7 +50,7 @@ p,
 
 .p4 {
     font-weight: bold;
-    color: #ffcc00;
+    color: #1fb0c6;
 }
 
 .nome-container {
@@ -66,7 +67,7 @@ p,
     border: 1px solid white;
     padding: 4px 10px;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(250, 240, 240, 0.2);
     color: white;
 }
 
