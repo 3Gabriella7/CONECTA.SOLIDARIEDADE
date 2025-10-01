@@ -68,6 +68,79 @@
                             </tr>
                         </table>
                     </form>
+                    <% if (mensagem) { %>
+                        <p style="color: rgb(255, 255, 255);">
+                            <%= mensagem %>
+                        </p>
+                        <% } %>
+                            <form action="/cadastro" method="POST" class="formItens">
+                                <table border="1">
+                                    <tr>
+                                        <td><input type="email" name="email" placeholder="Email" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="password" name="senha" placeholder="Senha" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="password" name="confirmarsenha" placeholder="Confirmar Senha"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>
+                                                <input type="radio" name="tipo_usuario" value="aluno" required> ALUNO
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="tipo_usuario" value="docente" required>
+                                                DOCENTE
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="codigo_da_sala">CÓDIGO DA SALA:</label>
+                                            <select name="codigo_da_sala" id="codigo_da_sala" required>
+                                                <option value="">SELECIONE</option>
+                                                <option value="I1HS">I1HS</option>
+                                                <option value="I2HSA">I2HS</option>
+                                                <option value="M1A">M1A</option>
+                                                <option value="M3A">M3A</option>
+                                                <option value="M3B">M3B</option>
+                                                <option value="M1C">M1C</option>
+                                                <option value="M3D">M3D</option>
+                                                <option value="M1F">M1F</option>
+                                                <option value="M1I">M1I</option>
+                                                <option value="M1IA">M1IA</option>
+                                                <option value="M1H">M1H</option>
+                                                <option value="T1A">T1A</option>
+                                                <option value="T1B">T1B</option>
+                                                <option value="T1C">T1C</option>
+                                                <option value="T1D">T1D </option>
+                                                <option value="T1IA">T1IA</option>
+                                                <option value="T3FA">T3FA</option>
+                                                <option value="T2FC">T2FC</option>
+                                                <option value="T3F">T3F</option>
+                                                <option value="T1FB">T1FB</option>
+                                                <option value="T1I">T1I</option>
+                                                <option value="I1F">I1F</option>
+                                                <option value="I1FA">I1FA</option>
+                                                <option value="I1HSB">I1HSB</option>
+                                                <option value="I1E">I1E</option>
+                                                <option value="N1I">N1I</option>
+                                                <option value="N3F">N3F</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="submit">CADASTRAR</button>
+                                            <a href="/login">
+                                                <button type="button">JÁ TENHO CADASTRO</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
                 </main>
             </div>
             <button type="submit">CADASTRAR</button>

@@ -33,6 +33,8 @@ db.serialize(() => {
     );
     //db.run("DELETE FROM cadastro WHERE id = 3");
     //db.run("DELETE FROM login");
+    //db.run("DELETE FROM cadastro WHERE id = 3");
+    //db.run("DELETE FROM cadastro");
 });
 
 //configura a rota '/static' para a pasta '__dirname/static' do seu servidor
