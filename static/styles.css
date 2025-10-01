@@ -5,18 +5,21 @@
 }
 
 body {
-    background-image: url('logof.png');
-    background-size: cover;
+    background-image: url('logof.png'); /* imagem de fundo */
+    background-size: cover; /* cobre toda a tela */
+    background-position: center; /* centraliza a imagem */
+    min-height: 100vh; /* altura mínima da tela */
+    display: flex; /* transforma o body em flex container */
+    flex-direction: column; /* organiza elementos em coluna */
+    color: #cc3300; /* cor padrão do texto */
+     /* Fundo da página que se move com o scroll */
     background-repeat: no-repeat;
-    background-position: center;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    color: #cc3300;
+
+
 }
 
 body.desfocar::before {
-    content: "";
+    content: ""; 
     position: fixed;
     top: 0;
     left: 0;
@@ -24,10 +27,21 @@ body.desfocar::before {
     height: 100%;
     background-image: url('logof.png');
     background-size: cover;
+     background: 
+      linear-gradient(rgba(31, 31, 31, 0.5), rgba(0, 0, 0, 0.5));
     background-position: center;
     filter: blur(10px);
     z-index: -1;
 }
+
+body.opacidade {
+    background: 
+     /* laranja semi-transparente */
+      url('logof.png'); /* sua imagem de fundo */
+    background-size: cover;
+    background-position: center;
+}
+
 
 /* borda dos titulos */
 h1,h2,h3,h4 { 
@@ -53,7 +67,8 @@ p,
     color: #1fb0c6;
 }
 
-.nome-container {
+/* nome da pessoa logada */
+.nome-container { 
     position: fixed;
     top: 20px;
     right: 20px;
@@ -71,6 +86,7 @@ p,
     color: white;
 }
 
+/* Botão de sair */
 .sair-btn {
     background-color: #e74c3c;
     border: none;
@@ -82,6 +98,7 @@ p,
     transition: background-color 0.3s;
 }
 
+/* vermelho mais escuro ao passar o mouse */
 .sair-btn:hover {
     background-color: #c0392b;
 }
@@ -126,8 +143,8 @@ table th, table td {
 }
 
 table tbody tr {
-    background-color: #fffaf0;
-    border-bottom: 1px solid #ffe4b5;
+    background-color: #ffe4b5;
+    border-bottom: 1px solid #fffaf0;
 }
 
 table tbody tr:nth-child(even) {
@@ -149,7 +166,7 @@ img {
     width: 400px;
     margin-top: 10px;
     border-radius: 15px;
-    box-shadow: 0px 8px 16px rgba(204, 51, 0, 0.3);
+  
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -158,16 +175,41 @@ img:hover {
     box-shadow: 0px 12px 24px rgba(204, 51, 0, 0.4);
 }
 
+footer.footer-top {
+    background: #782923;
+    height: 70px;
+    display: flex;
+    justify-content: center; /* mantém os botões centralizados */
+    align-items: center;     /* centraliza verticalmente */
+    position: relative;       /* base para posicionamento da logo */
+    margin: 0;
+    padding: 0 20px;
+}
+
+.button-container {
+    display: flex;
+    gap: 40px; /* espaço entre os botões */
+}
+
+.footer-logo {
+    width: 65px;
+    height: auto;
+    position: absolute; /* tira do fluxo do flex e posiciona no canto */
+    left: 20px;         /* distância da borda esquerda */
+    top: 40%;           /* centraliza verticalmente */
+    transform: translateY(-50%); /* ajuste fino da centralização vertical */
+}
 
 footer {
-    margin-top: auto;
+    margin-top: auto; /* empurra para baixo */
     background: #782923;
     color: #ffffff;
     text-align: center;
-    padding: 20px;
+    padding: 5px 10px;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-    padding: 5px 10px;
     height: 40px;
+    position: relative;
+    z-index: 1; /* acima do background */
 }
