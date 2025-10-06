@@ -4,31 +4,21 @@
 <%- include("../patrials/head") %>
 
 
-     <body class="opacidade">
-        <footer class="footer-top">
-        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-        <div class="button-container">
-            <a href="/cadastro"><button>CADASTRAR</button></a>
-            <a href="/login"><button>LOGAR</button></a>
-            <a href="/info"><button>SOBRE O SITE</button></a>
-            <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
-        </div>
-          </footer>
-        <% if (nome) { %>
-            <div class="nome-container">
-                <p style="color:#ffffff; " class="Nome Logado">
-                    <%= nome %>
-                </p>
-                <a href="/logout">
-                    <button class="sair-btn">SAIR</button>
-                </a>
-            </div>
-            <% } %>
-           <br><br><br><br><br><br>
-               
+    <body class="opacidade">
+                <footer class="footer-top">
+                    <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+                    <div class="button-container">
+                        <a href="/cadastro"><button>CADASTRAR</button></a>
+                        <a href="/login"><button>LOGAR</button></a>
+                        <a href="/info"><button>SOBRE O SITE</button></a>
+                        <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
+                    </div>
+                </footer>
+                <br><br><br><br><br><br>
+
                 <%- include("../patrials/footer") %>
-                
+
     </body>
-  
+
 
 </html>
