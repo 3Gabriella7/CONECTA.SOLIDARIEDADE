@@ -237,6 +237,10 @@ app.get("/conclusao3", (req, res) => {
     console.log("GET /conclusao3")
     res.render("pages/conclusao3");
 })
+app.get("/conclusao4", (req, res) => {
+    console.log("GET /conclusao4")
+    res.render("pages/conclusao4");
+})
 
 // RANKING AGASALHO
 app.get("/ranking_agasalho", (req, res) => {
