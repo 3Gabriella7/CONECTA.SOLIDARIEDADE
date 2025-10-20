@@ -32,7 +32,7 @@ db.serialize(() => {
     db.run(
         "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
     );
-   
+
     //db.run("DELETE FROM cadastro WHERE id = 3");
     //db.run("DELETE FROM cadastro");
 });
@@ -130,7 +130,26 @@ app.post("/login", (req, res) => {
 app.get("/campanha/:tipo", (req, res) => {
     const tipo = req.params.tipo.toLowerCase();
     const usuario = req.session.usuario_id;
-    const email = req.session.email || ""; 
+    const email = req.session.email || "";
+
+    if (!usuario) return res.redirect("/login");
+
+    db.get("SELECT tipo_usuario FROM cadastro WHERE id=?", [usuario], (err, row) => {
+        if (err) throw err;
+
+        if (row && row.tipo_usuario === "docente") {
+            res.render("pages/campanha", { tipo, email });
+        } else {
+            res.redirect("/ranking_" + tipo);
+        }
+    });
+});
+
+// CAMPANHA
+app.get("/campanha/:tipo", (req, res) => {
+    const tipo = req.params.tipo.toLowerCase();
+    const usuario = req.session.usuario_id;
+    const email = req.session.email || "";
 
     if (!usuario) return res.redirect("/login");
 
@@ -147,16 +166,14 @@ app.get("/campanha/:tipo", (req, res) => {
 
 // DOAR AGASALHO
 app.get("/doar/agasalho", (req, res) => {
-    if (!req.session.usuario_id) {
-        return res.redirect("/login");
-    }
-    res.render("pages/doar_agasalho", { req });
+    if (!req.session.usuario_id) return res.redirect("/login");
+    const email = req.session.email || "";
+    res.render("pages/doar_agasalho", { req, email });
 });
 app.post("/doar/agasalho", (req, res) => {
     const { item_doado, quantidade, data } = req.body;
     const usuario_id = req.session.usuario_id;
     const pontuacao_final = item_doado * quantidade;
-
     const query = `INSERT INTO doar_agasalho (item_doado, quantidade, data, pontuacao_final, usuario_id)
                    VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
@@ -165,18 +182,17 @@ app.post("/doar/agasalho", (req, res) => {
     });
 });
 
+
 // DOAR BRINQUEDO
 app.get("/doar/brinquedo", (req, res) => {
-    if (!req.session.usuario_id) {
-        return res.redirect("/login");
-    }
-    res.render("pages/doar_brinquedo", { req });
+    if (!req.session.usuario_id) return res.redirect("/login");
+    const email = req.session.email || "";
+    res.render("pages/doar_brinquedo", { req, email });
 });
 app.post("/doar/brinquedo", (req, res) => {
     const { item_doado, quantidade, data } = req.body;
     const usuario_id = req.session.usuario_id;
     const pontuacao_final = item_doado * quantidade;
-
     const query = `INSERT INTO doar_brinquedo (item_doado, quantidade, data, pontuacao_final, usuario_id)
                    VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
@@ -185,18 +201,17 @@ app.post("/doar/brinquedo", (req, res) => {
     });
 });
 
+
 // DOAR ALIMENTO
 app.get("/doar/alimento", (req, res) => {
-    if (!req.session.usuario_id) {
-        return res.redirect("/login");
-    }
-    res.render("pages/doar_alimento", { req });
+    if (!req.session.usuario_id) return res.redirect("/login");
+    const email = req.session.email || "";
+    res.render("pages/doar_alimento", { req, email });
 });
 app.post("/doar/alimento", (req, res) => {
     const { item_doado, quantidade, data } = req.body;
     const usuario_id = req.session.usuario_id;
     const pontuacao_final = item_doado * quantidade;
-
     const query = `INSERT INTO doar_alimento (item_doado, quantidade, data, pontuacao_final, usuario_id)
                    VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
@@ -205,23 +220,92 @@ app.post("/doar/alimento", (req, res) => {
     });
 });
 
+
 // DOAR RAÇÃO
 app.get("/doar/racao", (req, res) => {
-    if (!req.session.usuario_id) {
-        return res.redirect("/login");
-    }
-    res.render("pages/doar_racao", { req });
+    if (!req.session.usuario_id) return res.redirect("/login");
+    const email = req.session.email || "";
+    res.render("pages/doar_racao", { req, email });
 });
 app.post("/doar/racao", (req, res) => {
     const { item_doado, quantidade, data } = req.body;
     const usuario_id = req.session.usuario_id;
     const pontuacao_final = item_doado * quantidade;
-
     const query = `INSERT INTO doar_racao (item_doado, quantidade, data, pontuacao_final, usuario_id)
                    VALUES (?, ?, ?, ?, ?)`;
     db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
         if (err) throw err;
         res.redirect("/conclusao4");
+    });
+});
+
+
+// RANKINGS
+app.get("/ranking_agasalho", (req, res) => {
+    const email = req.session.email || "";
+    const query = `
+        SELECT usuario_id,
+               SUM(item_doado * quantidade) AS pontuacao_total,
+               SUM(quantidade) AS total_itens,
+               MAX(data) AS ultima_data
+        FROM doar_agasalho
+        GROUP BY usuario_id
+        ORDER BY pontuacao_total DESC
+    `;
+    db.all(query, [], (err, rows) => {
+        if (err) throw err;
+        res.render("pages/ranking", { titulo: "Ranking Agasalho", dados: rows, req, email });
+    });
+});
+
+app.get("/ranking_brinquedo", (req, res) => {
+    const email = req.session.email || "";
+    const query = `
+        SELECT usuario_id,
+               SUM(item_doado * quantidade) AS pontuacao_total,
+               SUM(quantidade) AS total_itens,
+               MAX(data) AS ultima_data
+        FROM doar_brinquedo
+        GROUP BY usuario_id
+        ORDER BY pontuacao_total DESC
+    `;
+    db.all(query, [], (err, rows) => {
+        if (err) throw err;
+        res.render("pages/ranking", { titulo: "Ranking Brinquedo", dados: rows, req, email });
+    });
+});
+
+app.get("/ranking_alimento", (req, res) => {
+    const email = req.session.email || "";
+    const query = `
+        SELECT usuario_id,
+               SUM(item_doado * quantidade) AS pontuacao_total,
+               SUM(quantidade) AS total_itens,
+               MAX(data) AS ultima_data
+        FROM doar_alimento
+        GROUP BY usuario_id
+        ORDER BY pontuacao_total DESC
+    `;
+    db.all(query, [], (err, rows) => {
+        if (err) throw err;
+        res.render("pages/ranking", { titulo: "Ranking Alimento", dados: rows, req, email });
+    });
+});
+
+app.get("/ranking_racao", (req, res) => {
+    const email = req.session.email || "";
+    const query = `
+        SELECT usuario_id,
+               SUM(item_doado * quantidade) AS pontuacao_total,
+               SUM(quantidade) AS total_itens,
+               MAX(data) AS ultima_data
+        FROM doar_racao
+        GROUP BY usuario_id
+        ORDER BY pontuacao_total DESC
+    `;
+    db.all(query, [], (err, rows) => {
+        if (err) throw err;
+        res.render("pages/ranking", { titulo: "Ranking Ração", dados: rows, req, email });
     });
 });
 
@@ -241,74 +325,6 @@ app.get("/conclusao4", (req, res) => {
     console.log("GET /conclusao4")
     res.render("pages/conclusao4");
 })
-
-// RANKING AGASALHO
-app.get("/ranking_agasalho", (req, res) => {
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_agasalho
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Agasalho", dados: rows, req });
-    });
-});
-
-// RANKING BRINQUEDO
-app.get("/ranking_brinquedo", (req, res) => {
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_brinquedo
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Brinquedo", dados: rows, req });
-    });
-});
-
-// RANKING ALIMENTO
-app.get("/ranking_alimento", (req, res) => {
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_alimento
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Alimento", dados: rows, req });
-    });
-});
-
-// RANKING RAÇÃO
-app.get("/ranking_racao", (req, res) => {
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_racao
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Ração", dados: rows, req });
-    });
-});
 
 app.get("/info", (req, res) => {
     console.log("GET /info")
