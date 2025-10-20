@@ -33,7 +33,7 @@ db.serialize(() => {
         "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
     );
    
-    //db.run("DELETE FROM cadastro WHERE id = 3");
+    //db.run("DELETE FROM cadastro WHERE id = 4");
     //db.run("DELETE FROM cadastro");
 });
 
