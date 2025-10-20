@@ -51,10 +51,8 @@ app.set('view engine', 'ejs'); //habilita a 'view engine' para usar o 'ejs'
 
 //rota '/' (raiz) para o método GET /
 app.get("/", (req, res) => {
-    const nome = req.session.NomeLogado || null;
-    res.render("pages/index", { nome });
-    console.log("Nome da sessão:", req.session.NomeLogado);
-})
+    res.render("pages/index");
+});
 
 app.get("/cadastro", (req, res) => {
     const mensagem = req.query.mensagem || "";
@@ -132,17 +130,16 @@ app.post("/login", (req, res) => {
 app.get("/campanha/:tipo", (req, res) => {
     const tipo = req.params.tipo.toLowerCase();
     const usuario = req.session.usuario_id;
+    const email = req.session.email || ""; 
 
     if (!usuario) return res.redirect("/login");
 
     db.get("SELECT tipo_usuario FROM cadastro WHERE id=?", [usuario], (err, row) => {
         if (err) throw err;
 
-        if (row.tipo_usuario === "docente") {
-            // docente vê a campanha e pode doar ou ver ranking
-            res.render("pages/campanha", { tipo });
+        if (row && row.tipo_usuario === "docente") {
+            res.render("pages/campanha", { tipo, email });
         } else {
-            // aluno vai direto para o ranking da campanha
             res.redirect("/ranking_" + tipo);
         }
     });
@@ -239,6 +236,10 @@ app.get("/conclusao2", (req, res) => {
 app.get("/conclusao3", (req, res) => {
     console.log("GET /conclusao3")
     res.render("pages/conclusao3");
+})
+app.get("/conclusao4", (req, res) => {
+    console.log("GET /conclusao4")
+    res.render("pages/conclusao4");
 })
 
 // RANKING AGASALHO
