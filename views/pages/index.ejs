@@ -1,24 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <%- include("../patrials/head") %>
 
-
     <body class="opacidade">
-                <footer class="footer-top">
-                    <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-                    <div class="button-container">
-                        <a href="/cadastro"><button>CADASTRAR</button></a>
-                        <a href="/login"><button>LOGAR</button></a>
+        <footer class="footer-top">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+            <div class="right-footer">
+                <% if (email) { %>
+                    <div class="user-info">
+                        <p class="email-logado">
+                            <%= email %>
+                        </p>
+                        <a href="/logout"><button class="sair-btn">SAIR</button></a>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="button-container">
+                <% if (!isAdmin && !isDocente && !isAluno) { %>
+                    <!-- Visitante -->
+                    <a href="/cadastro"><button>CADASTRAR</button></a>
+                    <a href="/login"><button>LOGIN</button></a>
+                    <a href="/info"><button>SOBRE O SITE</button></a>
+                    <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
+
+                    <% } else if (isAdmin) { %>
+                        <!-- ADMIN -->
                         <a href="/info"><button>SOBRE O SITE</button></a>
                         <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
-                    </div>
-                </footer>
-                <br><br><br><br><br><br>
+                        <a href="/edicamp"><button>GERENCIAR CAMPANHAS</button></a>
+                        <a href="/ediusua"><button>GERENCIAR USUÁRIOS</button></a>
 
-                <%- include("../patrials/footer") %>
+                        <% } else if (isDocente) { %>
+                            <!-- DOCENTE -->
+                            <a href="/info"><button>SOBRE O SITE</button></a>
+                            <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
+                            <a href="/doar"><button>ACESSAR CAMPANHAS</button></a>
+                            <a href="/ranking"><button>VER RANKING GERAL</button></a>
 
+                            <% } else if (isAluno) { %>
+                                <!-- ALUNO -->
+                                <a href="/info"><button>SOBRE O SITE</button></a>
+                                <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
+                                <a href="/ranking"><button>VER RANKING GERAL</button></a>
+                                <% } %>
+            </div>
+        </footer>
+        </center>
+
+        <%- include("../patrials/footer") %>
     </body>
-
 
 </html>

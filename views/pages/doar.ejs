@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<%- include("../patrials/head") %>
+
+    <body class="desfocar">
+       <footer class="footer-top">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+            <div class="left-footer">
+                <% if (email) { %>
+                    <div class="user-info">
+                        <p class="email-logado">
+                            <%= email %>
+                        </p>
+                        <a href="/logout"><button class="sair-btn">SAIR</button></a>
+                    </div>
+                    <% } %>
+            </div>
+        </footer>
+        <center>
+            <h1>ESCOLHA A CAMPANHA PARA DOAR</h1>
+            <br>
+
+            <main>
+                <table>
+                    <tr>
+                        <td>
+                            <a href="/doar/agasalho"><button>DOAR AGASALHO</button></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/doar/brinquedo"><button>DOAR BRINQUEDO</button></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/doar/alimento"><button>DOAR ALIMENTO</button></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/doar/racao"><button>DOAR RAÇÃO PARA PETS</button></a>
+                        </td>
+                    </tr>
+                </table>
+            </main>
+
+            
+            <a href="/"><button>VOLTAR PARA A PÁGINA INICIAL</button></a><br>
+        </center>
+
+        <%- include("../patrials/footer") %>
+    </body>
+
+</html>

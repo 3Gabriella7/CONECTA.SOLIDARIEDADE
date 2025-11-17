@@ -4,22 +4,22 @@
 <%- include("../patrials/head") %>
 
     <body class="desfocar">
-         <footer class="footer-top">
-        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+        <footer class="footer-top">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
         </footer>
-        
+
         <center>
             <div class="page-box">
                 <br>
                 <h1>CADASTRE-SE
                 </h1>
                 <main>
-                   
-                            </tr>
-                            <tr>
-                        
-                            </tr>
-                        </table>
+
+                    </tr>
+                    <tr>
+
+                    </tr>
+                    </table>
                     </form>
                     <% if (mensagem) { %>
                         <p style="color: rgb(255, 255, 255);">
@@ -47,12 +47,16 @@
                                                 <input type="radio" name="tipo_usuario" value="docente" required>
                                                 DOCENTE
                                             </label>
+                                            <label>
+                                                <input type="radio" name="tipo_usuario" value="admin" required>
+                                                ADMIN
+                                            </label>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr id="linha_codigo">
                                         <td>
                                             <label for="codigo_da_sala">CÓDIGO DA SALA:</label>
-                                            <select name="codigo_da_sala" id="codigo_da_sala" required>
+                                            <select name="codigo_da_sala" id="codigo_da_sala">
                                                 <option value="">SELECIONE</option>
                                                 <option value="I1HS">I1HS</option>
                                                 <option value="I2HSA">I2HS</option>
@@ -68,7 +72,7 @@
                                                 <option value="T1A">T1A</option>
                                                 <option value="T1B">T1B</option>
                                                 <option value="T1C">T1C</option>
-                                                <option value="T1D">T1D </option>
+                                                <option value="T1D">T1D</option>
                                                 <option value="T1IA">T1IA</option>
                                                 <option value="T3FA">T3FA</option>
                                                 <option value="T2FC">T2FC</option>
@@ -84,6 +88,29 @@
                                             </select>
                                         </td>
                                     </tr>
+
+                                    <script>
+                                        const radios = document.querySelectorAll('input[name="tipo_usuario"]');
+                                        const linhaCodigo = document.getElementById('linha_codigo');
+                                        const selectCodigo = document.getElementById('codigo_da_sala');
+
+                                        radios.forEach(radio => {
+                                            radio.addEventListener('change', () => {
+                                                if (radio.value === 'admin') {
+                                                    linhaCodigo.style.display = 'none';
+                                                    selectCodigo.removeAttribute('required');
+                                                    selectCodigo.value = '';
+                                                } else {
+                                                    linhaCodigo.style.display = '';
+                                                    selectCodigo.setAttribute('required', 'required');
+                                                }
+                                            });
+                                        });
+
+                                        // Oculta inicialmente
+                                        linhaCodigo.style.display = 'none';
+                                    </script>
+
                                     <tr>
                                         <td>
                                             <button type="submit">CADASTRAR</button>
@@ -96,10 +123,10 @@
                             </form>
                 </main>
             </div>
-           
-            <a href="/"><button type="submit">VOLTAR</button></a>
-            </center>
-           
+
+            <a href="/"><button type="submit">VOLTAR</button></a><br>
+        </center>
+
         <%- include("../patrials/footer") %>
     </body>
 

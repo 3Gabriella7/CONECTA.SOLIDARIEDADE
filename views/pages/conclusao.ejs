@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("../patrials/head") %>
+
+    <body class="desfocar">
+        <footer class="footer-top">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+            <div class="left-footer">
+                <% if (email) { %>
+                    <div class="user-info">
+                        <p class="email-logado">
+                            <%= email %>
+                        </p>
+                        <a href="/logout"><button class="sair-btn">SAIR</button></a>
+                    </div>
+                    <% } %>
+            </div>
+        </footer>
+        <center><br>
+            <h2 class="titulo-index">Obrigado pela doação!</h2><br>
+            <h3 class="titulo-index">Sua contribuição faz a diferença!</h3><br>
+            <img src='./static/Agasalho.png' /><br><br><br>
+            <a href="/doar"><button type="submit">DOAR NOVAMENTE</button></a>
+            <a href="/ranking"><button type="submit">RANKING GERAL</button></a><br><br>
+            <%- include("../patrials/footer") %>
+    </body>
+
+</html>

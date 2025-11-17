@@ -1,356 +1,235 @@
-const express = require("express"); //adiciona o express na sua aplicação
-const session = require("express-session"); //adiciona o gerenciador de session do express
-const sqlite3 = require("sqlite3").verbose(); //adiciona a biblioteca para manipular arquivos do SQLite3
+const express = require("express");
+const session = require("express-session");
+const sqlite3 = require("sqlite3").verbose();
 
-const app = express(); //armazena as chamadas e propriedades da biblioteca express
-//configuração Express para processar requisições POST com BODY PARAMETERS
-//app.use(bodyparser.urlencoded({extended: true})); - Versão Express <= 4.x.x
-app.use(express.urlencoded({ extended: true })); // Versão Express <= 5.x.x
+const app = express();
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const PORT = 8000; //configura a porta TCP do express
-
-//conexão com oo BD
-// @ts-ignore
+const PORT = 8000;
 const db = new sqlite3.Database("doacoes.db");
+
+// --- BANCO DE DADOS ---
 db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS cadastro (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    senha TEXT,
+    confirmarsenha TEXT,
+    tipo_usuario TEXT,
+    codigo_da_sala TEXT
+  )`);
 
-    db.run("CREATE TABLE IF NOT EXISTS cadastro (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT, confirmarsenha TEXT, tipo_usuario TEXT, codigo_da_sala TEXT)"
-    );
-    db.run(
-        "CREATE TABLE IF NOT EXISTS login (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, senha TEXT)"
-    );
-    db.run(
-        "CREATE TABLE IF NOT EXISTS doar_agasalho (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
-    );
-    db.run(
-        "CREATE TABLE IF NOT EXISTS doar_brinquedo (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
-    );
-    db.run(
-        "CREATE TABLE IF NOT EXISTS doar_alimento (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
-    );
-    db.run(
-        "CREATE TABLE IF NOT EXISTS doar_racao (id INTEGER PRIMARY KEY AUTOINCREMENT, item_doado INT, quantidade INT, data DATE, pontuacao_final INT, usuario_id INT)"
-    );
-   
-    //db.run("DELETE FROM cadastro WHERE id = 4");
-    //db.run("DELETE FROM cadastro");
+    db.run(`CREATE TABLE IF NOT EXISTS doacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo_campanha TEXT,
+    item_doado TEXT,
+    quantidade INT,
+    data DATE,
+    pontuacao_final INT,
+    usuario_id INT
+  )`);
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS campanhas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    descricao TEXT NOT NULL,
+    imagem TEXT,
+    item_doavel TEXT NOT NULL,
+    pontos INTEGER NOT NULL
+  )
+`);
 });
 
-//configura a rota '/static' para a pasta '__dirname/static' do seu servidor
 app.use('/static', express.static(__dirname + '/static'));
+app.use(session({
+    secret: 'segredo',
+    resave: false,
+    saveUninitialized: true
+}));
+app.set('view engine', 'ejs');
 
-app.use(
-    session({
-        secret: 'segredo', // pode ser qualquer string
-        resave: false,
-        saveUninitialized: true
-    }));
-
-app.set('view engine', 'ejs'); //habilita a 'view engine' para usar o 'ejs'
-
-//rota '/' (raiz) para o método GET /
+// PÁGINA INICIAL
 app.get("/", (req, res) => {
-    res.render("pages/index");
+    const tipo_usuario = req.session.tipo_usuario || null;
+    const isAdmin = tipo_usuario === "admin";
+    const isDocente = tipo_usuario === "docente";
+    const isAluno = tipo_usuario === "aluno";
+    const email = req.session.email || null; // adiciona o email da sessão
+    res.render("pages/index", { isAdmin, isDocente, isAluno, email });
 });
 
+// CADASTRO
 app.get("/cadastro", (req, res) => {
     const mensagem = req.query.mensagem || "";
-    res.render("pages/cadastro", { req, mensagem });
+    const email = req.session.email || null;
+    res.render("pages/cadastro", { req, mensagem, email });
 });
+
 app.post("/cadastro", (req, res) => {
     const { email, senha, confirmarsenha, tipo_usuario, codigo_da_sala } = req.body;
+    const sessionEmail = req.session.email || null;
 
-    if (!email || !senha || !confirmarsenha || !tipo_usuario || !codigo_da_sala) {
-        return res.render("pages/cadastro", { mensagem: "Preencha todos os campos", req });
-    }
+    if (!email || !senha || !confirmarsenha || !tipo_usuario)
+        return res.render("pages/cadastro", { mensagem: "Preencha todos os campos", req, email: sessionEmail });
 
-    if (senha !== confirmarsenha) {
-        return res.render("pages/cadastro", { mensagem: "As senhas não batem", req });
-    }
+    if (tipo_usuario !== "admin" && !codigo_da_sala)
+        return res.render("pages/cadastro", { mensagem: "Preencha todos os campos", req, email: sessionEmail });
 
-    // Verifica se o email já existe
+    if (senha !== confirmarsenha)
+        return res.render("pages/cadastro", { mensagem: "As senhas não batem", req, email: sessionEmail });
+
     const queryCheck = "SELECT * FROM cadastro WHERE email = ?";
     db.get(queryCheck, [email], (err, row) => {
         if (err) throw err;
+        if (row) return res.render("pages/cadastro", { mensagem: "Email já cadastrado", req, email: sessionEmail });
 
-        if (row) {
-            // Email já existe, não cadastra
-            return res.render("pages/cadastro", { mensagem: "Email já cadastrado", req });
-        }
-
-        // Se não existir, insere o usuário
-        const insertCadastro = "INSERT INTO cadastro (email, senha, confirmarsenha, tipo_usuario, codigo_da_sala) VALUES (?, ?, ?, ?, ?)";
-        db.run(insertCadastro, [email, senha, confirmarsenha, tipo_usuario, codigo_da_sala], function (err) {
+        const salaParaSalvar = tipo_usuario === "admin" ? "" : codigo_da_sala;
+        const insert = `INSERT INTO cadastro (email, senha, confirmarsenha, tipo_usuario, codigo_da_sala)
+                    VALUES (?, ?, ?, ?, ?)`;
+        db.run(insert, [email, senha, confirmarsenha, tipo_usuario, salaParaSalvar], function (err) {
             if (err) throw err;
-            console.log("Novo usuário cadastrado:", email, tipo_usuario);
-            return res.redirect("/login?mensagem=Cadastro realizado com sucesso");
+            res.redirect("/login?mensagem=Cadastro realizado com sucesso");
         });
     });
 });
 
+// LOGIN
 app.get("/login", (req, res) => {
     const mensagem = req.query.mensagem || "";
-    res.render("pages/login", { mensagem });
+    const email = req.session.email || null;
+    res.render("pages/login", { mensagem, email });
 });
 
 app.post("/login", (req, res) => {
-    const { email, senha, doar } = req.body;
-
-    if (!email || !senha || !doar) {
-        return res.redirect("/login?mensagem=Preencha todos os campos");
-    }
+    const { email, senha } = req.body;
+    if (!email || !senha) return res.redirect("/login?mensagem=Preencha todos os campos");
 
     const query = "SELECT * FROM cadastro WHERE email=? AND senha=?";
     db.get(query, [email, senha], (err, row) => {
         if (err) throw err;
+        if (!row) return res.redirect("/login?mensagem=Usuário ou senha inválidos");
 
-        if (row) {
-            req.session.loggedin = true;
-            req.session.email = row.email;
-            req.session.usuario_id = row.id;
-            req.session.tipo_usuario = row.tipo_usuario;
+        req.session.loggedin = true;
+        req.session.email = row.email;
+        req.session.usuario_id = row.id;
+        req.session.tipo_usuario = row.tipo_usuario;
 
-            // padroniza o tipo da campanha para minúsculas
-            const tipoCampanha = doar.toLowerCase();
-
-            if (row.tipo_usuario === "docente") {
-                // docente vai para página de campanha
-                return res.redirect("/campanha/" + tipoCampanha);
-            } else {
-                // aluno vai direto para o ranking da campanha
-                return res.redirect("/ranking_" + tipoCampanha);
-            }
-        } else {
-            return res.redirect("/login?mensagem=Usuário ou senha inválidos");
-        }
+        return res.redirect("/");
     });
 });
 
-app.get("/campanha/:tipo", (req, res) => {
-    const tipo = req.params.tipo.toLowerCase();
-    const usuario = req.session.usuario_id;
-    const email = req.session.email || ""; 
-
-    if (!usuario) return res.redirect("/login");
-
-    db.get("SELECT tipo_usuario FROM cadastro WHERE id=?", [usuario], (err, row) => {
-        if (err) throw err;
-
-        if (row && row.tipo_usuario === "docente") {
-            res.render("pages/campanha", { tipo, email });
-        } else {
-            res.redirect("/ranking_" + tipo);
-        }
-    });
+// DOAR
+app.get("/doar", (req, res) => {
+    if (!req.session.loggedin) return res.redirect("/login");
+    const email = req.session.email || null;
+    res.render("pages/doar", { mensagem: "", email });
 });
 
-//  CAMPANHA
-app.get("/campanha/:tipo", (req, res) => {
-    const tipo = req.params.tipo.toLowerCase();
-    const usuario = req.session.usuario_id;
-    const email = req.session.email || "";
-
-    if (!usuario) return res.redirect("/login");
-
-    db.get("SELECT tipo_usuario FROM cadastro WHERE id=?", [usuario], (err, row) => {
-        if (err) throw err;
-
-        if (row && row.tipo_usuario === "docente") {
-            res.render("pages/campanha", { tipo, email });
-        } else {
-            res.redirect("/ranking_" + tipo);
-        }
-    });
-});
-
-// DOAR AGASALHO
-app.get("/doar/agasalho", (req, res) => {
-    if (!req.session.usuario_id) 
-        return res.redirect("/login");
-     const email = req.session.email || ""; 
-    res.render("pages/doar_agasalho", { req, email });
-});
-app.post("/doar/agasalho", (req, res) => {
-    const { item_doado, quantidade, data } = req.body;
+app.post("/doar", (req, res) => {
+    const { tipo_campanha, item_doado, quantidade, data } = req.body;
     const usuario_id = req.session.usuario_id;
-    const pontuacao_final = item_doado * quantidade;
+    const pontuacao_final = quantidade * 10;
 
-    const query = `INSERT INTO doar_agasalho (item_doado, quantidade, data, pontuacao_final, usuario_id)
-                   VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
+    const query = `INSERT INTO doacoes (tipo_campanha, item_doado, quantidade, data, pontuacao_final, usuario_id)
+                 VALUES (?, ?, ?, ?, ?, ?)`;
+    db.run(query, [tipo_campanha, item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
         if (err) throw err;
-        res.redirect("/conclusao1");
+        res.redirect("/conclusao");
     });
 });
 
-// DOAR BRINQUEDO
-app.get("/doar/brinquedo", (req, res) => {
-    if (!req.session.usuario_id) 
-        return res.redirect("/login");
-    const email = req.session.email || "";
-    res.render("pages/doar_brinquedo", { req, email });
-});
-app.post("/doar/brinquedo", (req, res) => {
-    const { item_doado, quantidade, data } = req.body;
-    const usuario_id = req.session.usuario_id;
-    const pontuacao_final = item_doado * quantidade;
-    const query = `INSERT INTO doar_brinquedo (item_doado, quantidade, data, pontuacao_final, usuario_id)
-                   VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
+// RANKING
+app.get("/ranking", (req, res) => {
+    const email = req.session.email || null;
+    const query = `
+    SELECT c.email, d.tipo_campanha, SUM(d.pontuacao_final) AS pontos_totais
+    FROM doacoes d
+    JOIN cadastro c ON d.usuario_id = c.id
+    GROUP BY d.usuario_id, d.tipo_campanha
+    ORDER BY pontos_totais DESC
+  `;
+    db.all(query, [], (err, rows) => {
         if (err) throw err;
-        res.redirect("/conclusao2");
+        res.render("pages/ranking", { dados: rows, email });
     });
 });
 
-// DOAR ALIMENTO
-app.get("/doar/alimento", (req, res) => {
+// ADMIN
+// Página principal de edição de campanhas
+app.get("/edicamp", (req, res) => {
+    if (req.session.tipo_usuario !== "admin") return res.redirect("/");
+    const email = req.session.email || null;
+
+    db.all("SELECT * FROM campanhas", (err, campanhas) => {
+        if (err) throw err;
+        res.render("pages/edicamp", { email, campanhas, mensagem: req.query.mensagem || "" });
+    });
+});
+
+// Adicionar nova campanha
+app.post("/edicamp/add", (req, res) => {
+    const { nome, descricao, imagem, item_doavel, pontos } = req.body;
+
+    if (!nome || !descricao || !item_doavel || !pontos)
+        return res.redirect("/edicamp?mensagem=Preencha todos os campos");
+
+    const insert = `
+        INSERT INTO campanhas (nome, descricao, imagem, item_doavel, pontos)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    db.run(insert, [nome, descricao, imagem, item_doavel, pontos], (err) => {
+        if (err) throw err;
+        res.redirect("/?mensagem=Campanha Efetuada com Sucesso");
+    });
+});
+
+// Excluir campanha
+app.post("/edicamp/delete/:id", (req, res) => {
+    const id = req.params.id;
+    db.run("DELETE FROM campanhas WHERE id = ?", [id], (err) => {
+        if (err) throw err;
+        res.redirect("/edicamp?mensagem=Campanha Excluída com Sucesso");
+    });
+});
+
+app.get("/ediusua", (req, res) => {
+    if (req.session.tipo_usuario !== "admin") return res.redirect("/");
+    const email = req.session.email || null;
+    res.render("pages/ediusua", { email });
+});
+
+// CONCLUSÃO
+app.get("/conclusao", (req, res) => {
     if (!req.session.usuario_id) return res.redirect("/login");
-    const email = req.session.email || "";
-    res.render("pages/doar_alimento", { req, email });
-});
-app.post("/doar/alimento", (req, res) => {
-    const { item_doado, quantidade, data } = req.body;
-    const usuario_id = req.session.usuario_id;
-    const pontuacao_final = item_doado * quantidade;
-    const query = `INSERT INTO doar_alimento (item_doado, quantidade, data, pontuacao_final, usuario_id)
-                   VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
-        if (err) throw err;
-        res.redirect("/conclusao3");
-    });
+    const email = req.session.email || null;
+    res.render("pages/conclusao", { email, req });
 });
 
-
-// DOAR RAÇÃO
-app.get("/doar/racao", (req, res) => {
-    if (!req.session.usuario_id) return res.redirect("/login");
-    const email = req.session.email || "";
-    res.render("pages/doar_racao", { req, email });
-});
-app.post("/doar/racao", (req, res) => {
-    const { item_doado, quantidade, data } = req.body;
-    const usuario_id = req.session.usuario_id;
-    const pontuacao_final = item_doado * quantidade;
-    const query = `INSERT INTO doar_racao (item_doado, quantidade, data, pontuacao_final, usuario_id)
-                   VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [item_doado, quantidade, data, pontuacao_final, usuario_id], function (err) {
-        if (err) throw err;
-        res.redirect("/conclusao4");
-    });
-});
-
-// RANKINGS
-app.get("/ranking_agasalho", (req, res) => {
-    const email = req.session.email || "";
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_agasalho
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Agasalho", dados: rows, req, email });
-    });
-});
-
-app.get("/ranking_brinquedo", (req, res) => {
-    const email = req.session.email || "";
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_brinquedo
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Brinquedo", dados: rows, req, email });
-    });
-});
-
-app.get("/ranking_alimento", (req, res) => {
-    const email = req.session.email || "";
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_alimento
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Alimento", dados: rows, req, email });
-    });
-});
-
-app.get("/ranking_racao", (req, res) => {
-    const email = req.session.email || "";
-    const query = `
-        SELECT usuario_id,
-               SUM(item_doado * quantidade) AS pontuacao_total,
-               SUM(quantidade) AS total_itens,
-               MAX(data) AS ultima_data
-        FROM doar_racao
-        GROUP BY usuario_id
-        ORDER BY pontuacao_total DESC
-    `;
-    db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        res.render("pages/ranking", { titulo: "Ranking Ração", dados: rows, req, email });
-    });
-});
-
-app.get("/conclusao1", (req, res) => {
-    console.log("GET /conclusao1")
-    res.render("pages/conclusao1");
-})
-app.get("/conclusao2", (req, res) => {
-    console.log("GET /conclusao2")
-    res.render("pages/conclusao2");
-})
-app.get("/conclusao3", (req, res) => {
-    console.log("GET /conclusao3")
-    res.render("pages/conclusao3");
-})
-app.get("/conclusao4", (req, res) => {
-    console.log("GET /conclusao4")
-    res.render("pages/conclusao4");
-})
-
+// INFO e CP
 app.get("/info", (req, res) => {
-    console.log("GET /info")
-    res.render("pages/info");
-})
+    const email = req.session.email || null;
+    res.render("pages/info", { email });
+});
 
 app.get("/cp", (req, res) => {
-    console.log("GET /cp")
-    res.render("pages/cp");
-})
-
-app.get("/logout", (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.redirect("/");
-        }
-        res.redirect("/");
-    });
-})
-
-app.use('/{*erro}', (req, res) => {
-    //Envia uma resposta de erro 404
-    res.status(404).render('pages/erro', { titulo: "ERRO 404", req: req, msg: "404" });
+    const email = req.session.email || null;
+    res.render("pages/cp", { email });
 });
 
+// LOGOUT
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => res.redirect("/"));
+});
+
+// ERRO 404
+app.use((req, res) => {
+    res.status(404).render("pages/erro", { msg: "Página não encontrada" });
+});
+
+// INICIAR SERVIDOR
 app.listen(PORT, () => {
     console.log(`Servidor sendo executado na porta ${PORT}`);
     console.log(__dirname + "/static");
-}); 
+});
