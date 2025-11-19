@@ -2,52 +2,57 @@
 <html lang="pt-br">
 <%- include("../patrials/head") %>
 
-    <body class="opacidade">
-        <footer class="footer-top">
-            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-            <div class="right-footer">
-                <% if (email) { %>
-                    <div class="user-info">
-                        <p class="email-logado">
-                            <%= email %>
-                        </p>
-                        <a href="/logout"><button class="sair-btn">SAIR</button></a>
-                    </div>
-                    <% } %>
-            </div>
-            <div class="button-container">
-                <% if (!isAdmin && !isDocente && !isAluno) { %>
-                    <!-- Visitante -->
-                    <a href="/cadastro"><button>CADASTRAR</button></a>
-                    <a href="/login"><button>LOGIN</button></a>
-                    <a href="/info"><button>SOBRE O SITE</button></a>
-                    <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
+<body>
 
-                    <% } else if (isAdmin) { %>
-                        <!-- ADMIN -->
-                        <a href="/info"><button>SOBRE O SITE</button></a>
-                        <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
-                        <a href="/edicamp"><button>GERENCIAR CAMPANHAS</button></a>
-                        <a href="/ediusua"><button>GERENCIAR USUÁRIOS</button></a>
+    <!-- CABEÇALHO PRINCIPAL -->
+    <footer class="footer-top">
+        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo"> 
+       <div class="titulo-campanha">
+    <span class="titulo-topo">CONECTA</span>
+    <span class="titulo-base">SOLIDARIEDADE</span>
+</div>
 
-                        <% } else if (isDocente) { %>
-                            <!-- DOCENTE -->
-                            <a href="/info"><button>SOBRE O SITE</button></a>
-                            <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
-                            <a href="/doar"><button>ACESSAR CAMPANHAS</button></a>
-                            <a href="/ranking"><button>VER RANKING GERAL</button></a>
 
-                            <% } else if (isAluno) { %>
-                                <!-- ALUNO -->
-                                <a href="/info"><button>SOBRE O SITE</button></a>
-                                <a href="/cp"><button>CAMPANHAS PARTICIPANTES</button></a>
-                                <a href="/ranking"><button>VER RANKING GERAL</button></a>
-                                <% } %>
-            </div>
-        </footer>
-        </center>
 
-        <%- include("../patrials/footer") %>
-    </body>
+        <div class="right-footer">
+            <% if (email) { %>
+                <div class="user-info">
+                    <p class="email-logado"><%= email %></p>
+                    <a href="/logout"><button class="sair-btn">SAIR</button></a>
+                </div>
+            <% } %>
+        </div>
+    </footer>
 
+    <!-- SUB-CABEÇALHO / MENU -->
+    <div class="sub-header">
+
+        <% if (!isAdmin && !isDocente && !isAluno) { %>
+            <a href="/cadastro">CADASTRAR</a>
+            <a href="/login">LOGIN</a>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+
+        <% } else if (isAdmin) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+
+        <% } else if (isDocente) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/doar">ACESSAR CAMPANHAS</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+
+        <% } else if (isAluno) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+        <% } %>
+
+    </div>
+
+    <%- include("../patrials/footer") %>
+</body>
 </html>

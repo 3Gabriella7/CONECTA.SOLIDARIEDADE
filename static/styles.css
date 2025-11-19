@@ -1,23 +1,23 @@
+/* Reset básico para remover margens e paddings padrões */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Configurações gerais do corpo da página */
 body {
-    background-image: url('logof.png'); /* imagem de fundo */
-    background-size: cover; /* cobre toda a tela */
-    background-position: center; /* centraliza a imagem */
-    min-height: 100vh; /* altura mínima da tela */
-    display: flex; /* transforma o body em flex container */
-    flex-direction: column; /* organiza elementos em coluna */
-    color: #cc3300; /* cor padrão do texto */
-     /* Fundo da página que se move com o scroll */
+    background-color: #FFE4B5; 
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #cc3300;
     background-repeat: no-repeat;
-
-
 }
 
+/* Efeito de desfocar o fundo quando a classe "desfocar" é aplicada ao body */
 body.desfocar::before {
     content: ""; 
     position: fixed;
@@ -27,34 +27,34 @@ body.desfocar::before {
     height: 100%;
     background-image: url('logof.png');
     background-size: cover;
-     background: 
+    background: 
       linear-gradient(rgba(31, 31, 31, 0.5), rgba(0, 0, 0, 0.5));
     background-position: center;
     filter: blur(10px);
     z-index: -1;
 }
 
+/* Mantém a imagem com efeito de opacidade quando essa classe é usada */
 body.opacidade {
     background: 
-     /* laranja semi-transparente */
-      url('logof.png'); /* sua imagem de fundo */
+      url('logof.png');
     background-size: cover;
     background-position: center;
 }
 
-
-/* borda dos titulos */
+/* Estilização dos títulos */
 h1,h2,h3,h4 { 
     display: inline-block;
     color: #ff6600;
     margin-bottom: 15px;
     font-weight: 600;
     padding: 10px;
-    border: 2px solid #ffcc00;
+    border: 2px solid #00eaff;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+/* Parágrafos gerais */
 p,
 .p4 {
     font-size: 1.2rem;
@@ -67,7 +67,7 @@ p,
     color: #1fb0c6;
 }
 
-/* nome da pessoa logada */
+/* Nome logado */
 .nome-container { 
     position: fixed;
     top: 20px;
@@ -86,7 +86,7 @@ p,
     color: white;
 }
 
-/* Botão de sair */
+/* Botão sair */
 .sair-btn {
     background-color: #e74c3c;
     border: none;
@@ -96,13 +96,33 @@ p,
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s;
+     width: 65px;
+    height: auto;
+    position: absolute;
+    right: 20px;         
+    transform: translateY(-50%);
 }
 
-/* vermelho mais escuro ao passar o mouse */
-.sair-btn:hover {
-    background-color: #c0392b;
+
+
+/* =============================== */
+/* REMOVER BOTÕES DOS LINKS        */
+/* =============================== */
+
+/* Remove aparência de botão dos <a> */
+a {
+    text-decoration: none; 
+    color: inherit;
 }
 
+/* Caso exista button dentro de <a>, remove estilo */
+.sub-header a button,
+a button {
+    all: unset;
+    cursor: pointer;
+}
+
+/* Aplica estilo somente em botões REAIS */
 button {
     background: linear-gradient(45deg, #ff6600, #ffcc00);
     border: none;
@@ -121,6 +141,10 @@ button:hover {
     transform: scale(1.05);
 }
 
+/* =============================== */
+/* TABELAS                        */
+/* =============================== */
+
 table {
     width: 90%;
     margin: 30px auto;
@@ -130,12 +154,6 @@ table {
     border-radius: 12px;
 }
 
-table thead {
-    background-color: #cc3300;
-    color: #ffffff;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
 
 table th, table td {
     padding: 15px;
@@ -162,74 +180,132 @@ tfoot {
     text-align: center;
 }
 
+/* =============================== */
+/* IMAGENS                        */
+/* =============================== */
+
 img {
+    transition: none !important;
+    transform: none !important;
     width: 400px;
-    margin-top: 10px;
-    border-radius: 15px;
-  
+    margin-top: -13px;
+    border-radius: 10px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 img:hover {
     transform: scale(1.03);
-    box-shadow: 0px 12px 24px rgba(204, 51, 0, 0.4);
 }
 
+/* =============================== */
+/* CABEÇALHOS E SUB-HEADER        */
+/* =============================== */
+
 footer.footer-top {
-    background: #782923;
+    background: #800000;
     height: 70px;
     display: flex;
-    justify-content: center; /* mantém os botões centralizados */
-    align-items: center;     /* centraliza verticalmente */
-    position: relative;       /* base para posicionamento da logo */
+    justify-content: center;
+    align-items: center;
+    position: relative;
     margin: 0;
     padding: 0 20px;
 }
 
+.sub-header {
+    background-color: #ffc251; 
+    height: 30px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 0;
+    padding: 0 20px;
+}
+
+/* LINKS da sub-header */
+.sub-header a {
+    text-decoration: none; 
+    padding: 5px 15px;
+    color: #800000;
+    font-weight: 600; /*NEGRITO*/
+    transition: 0.2s ease-in-out;
+}
+
+.sub-header a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* container dos links */
+.button-container {
+    display: flex;
+    gap: 40px;
+}
+
+.titulo-campanha {
+    position: absolute;
+    left: 80px; /* distância da logo */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* <-- centraliza as duas linhas entre si */
+    text-align: center;  /* <-- evita desalinhamento visual */
+    line-height: 1;
+}
+
+.titulo-topo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: 	#FF7F50;
+    letter-spacing: 1px;
+}
+
+.titulo-base {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #FFE4B5;
+    letter-spacing: 1px;
+}
+
+
+/* email logado */
 footer.footer-top .user-info {
     display: flex;
     align-items: center;
-    gap: 10px; /* espaço entre email e botão */
+    gap: 10px;
 }
 
+/* NOME PESSOA LOGADA*/
 footer.footer-top .user-info .email-logado {
     color: #ddff00;
-    font-weight: bold;
+    font-weight: bold;      
+    top: 30%;
+    right: 40%; 
+    position: absolute;
 }
 
-footer.footer-top .user-info .sair-btn {
-    padding: 5px 10px;
-    background: #ff0000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.button-container {
-    display: flex;
-    gap: 40px; /* espaço entre os botões */
-}
-
+/* logo */
 .footer-logo {
     width: 65px;
     height: auto;
-    position: absolute; /* tira do fluxo do flex e posiciona no canto */
-    left: 20px;         /* distância da borda esquerda */
-    top: 40%;           /* centraliza verticalmente */
-    transform: translateY(-50%); /* ajuste fino da centralização vertical */
+    position: absolute;
+    left: 20px;         
+    top: 40%;
+    transform: translateY(-50%);
 }
 
+/* Rodapé */
 footer {
-    margin-top: auto; /* empurra para baixo */
-    background: #782923;
+    margin-top: auto;
+    background: #800000;
     color: #ffffff;
     text-align: center;
     padding: 5px 10px;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     letter-spacing: 0.5px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     height: 40px;
     position: relative;
-    z-index: 1; /* acima do background */
+    z-index: 1;
 }
