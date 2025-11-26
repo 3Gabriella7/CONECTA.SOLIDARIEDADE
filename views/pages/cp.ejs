@@ -4,10 +4,42 @@
 
    <body class="desfocar">
          <footer class="footer-top">
+        <a href="/">
         <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+        <a href="/">
+    <img src="/static/sair.png" alt="Voltar" class="footer-sair">
+</a>
+        </a>
         </footer>
         <center>
             <div page-box>
+    <div class="sub-header">
+
+        <% if (!isAdmin && !isDocente && !isAluno) { %>
+            <a href="/cadastro">CADASTRAR</a>
+            <a href="/login">LOGIN</a>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+
+        <% } else if (isAdmin) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+
+        <% } else if (isDocente) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/doar">ACESSAR CAMPANHAS</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+
+        <% } else if (isAluno) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+        <% } %>
+
+    </div>
                 <br>
                 <h1>CAMPANHAS PARTICIPANTES:
                 </h1>
@@ -50,7 +82,7 @@
                     </tr>
                 </table>
             </div>
-            <a href="/"><button type="submit">VOLTAR</button></a><br><br>
+
         </center>
         <%- include("../patrials/footer") %>
     </body>

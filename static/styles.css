@@ -1,4 +1,4 @@
-/* Reset básico para remover margens e paddings padrões */
+ /* Reset básico para remover margens e paddings padrões */
 * {
     margin: 0;
     padding: 0;
@@ -17,23 +17,6 @@ body {
     background-repeat: no-repeat;
 }
 
-/* Efeito de desfocar o fundo quando a classe "desfocar" é aplicada ao body */
-body.desfocar::before {
-    content: ""; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('logof.png');
-    background-size: cover;
-    background: 
-      linear-gradient(rgba(31, 31, 31, 0.5), rgba(0, 0, 0, 0.5));
-    background-position: center;
-    filter: blur(10px);
-    z-index: -1;
-}
-
 /* Mantém a imagem com efeito de opacidade quando essa classe é usada */
 body.opacidade {
     background: 
@@ -42,29 +25,12 @@ body.opacidade {
     background-position: center;
 }
 
-/* Estilização dos títulos */
-h1,h2,h3,h4 { 
-    display: inline-block;
-    color: #ff6600;
-    margin-bottom: 15px;
-    font-weight: 600;
-    padding: 10px;
-    border: 2px solid #00eaff;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.7);
-}
-
 /* Parágrafos gerais */
 p,
 .p4 {
     font-size: 1.2rem;
     margin-bottom: 20px;
     line-height: 1.7;
-}
-
-.p4 {
-    font-weight: bold;
-    color: #1fb0c6;
 }
 
 /* Nome logado */
@@ -96,14 +62,12 @@ p,
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s;
-     width: 65px;
+    width: 65px;
     height: auto;
     position: absolute;
     right: 20px;         
     transform: translateY(-50%);
 }
-
-
 
 /* =============================== */
 /* REMOVER BOTÕES DOS LINKS        */
@@ -122,63 +86,155 @@ a button {
     cursor: pointer;
 }
 
-/* Aplica estilo somente em botões REAIS */
 button {
-    background: linear-gradient(45deg, #ff6600, #ffcc00);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 30px;
-    color: white;
+    background: #ebf2ff;                 /* fundo bem claro */
+    color: #cc3300;                         /* texto escuro elegante */
+    padding: 7px 18px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;           /* borda clara */
     font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+    font-weight: 600;
+
 }
 
 button:hover {
-    background: linear-gradient(45deg, #cc3300, #ff9900);
-    transform: scale(1.05);
+    background: #f3f3f3;
+    box-shadow: #800000
 }
 
-/* =============================== */
-/* TABELAS                        */
-/* =============================== */
 
-table {
-    width: 90%;
-    margin: 30px auto;
-    border-collapse: collapse;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+
+/* ====================================================
+   TABELAS DE LOGIN E CADASTRO
+   Estilo clean, claro, bordas arredondadas
+   ==================================================== */
+
+.auth-table {
+    width: 100%;
+    max-width: 500px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: #ffffffcc;
+    backdrop-filter: blur(6px);
     border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
 }
 
-
-table th, table td {
-    padding: 15px;
-    text-align: center;
+.auth-table th,
+.auth-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-table tbody tr {
-    background-color: #ffe4b5;
-    border-bottom: 1px solid #fffaf0;
-}
-
-table tbody tr:nth-child(even) {
-    background-color: #fff0d9;
-}
-
-table tbody tr:hover {
-    background-color: #ffdab9;
-}
-
-tfoot {
-    background-color: #cc3300;
-    color: white;
+.auth-table th {
+    background: #f8f9fa;
     font-weight: bold;
-    text-align: center;
+    color: #333;
 }
+
+.auth-table tr:last-child td {
+    border-bottom: none;
+}
+
+.auth-table input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+
+/* ====================================================
+   TABELA DE CRIAR CAMPANHA (Dados principais)
+   ==================================================== */
+
+.camp-table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffffcc;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.camp-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.camp-table tr:last-child td {
+    border-bottom: none;
+}
+
+.camp-table input,
+.camp-table textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+
+/* ====================================================
+   TABELA DE ITENS (lista de itens da campanha)
+   ==================================================== */
+
+.itens-table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffffcc;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.itens-table th,
+.itens-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.itens-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.itens-table tr:last-child td {
+    border-bottom: none;
+}
+
+.itens-table input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.itens-table button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #d8e7ff;
+    color: #335;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.itens-table button:hover {
+    background: #bdd5ff;
+}
+
 
 /* =============================== */
 /* IMAGENS                        */
@@ -244,20 +300,20 @@ footer.footer-top {
 
 .titulo-campanha {
     position: absolute;
-    left: 80px; /* distância da logo */
+    left: 80px; 
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    align-items: center; /* <-- centraliza as duas linhas entre si */
-    text-align: center;  /* <-- evita desalinhamento visual */
+    align-items: center;
+    text-align: center;
     line-height: 1;
 }
 
 .titulo-topo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: 	#FF7F50;
+    color: #FF7F50;
     letter-spacing: 1px;
 }
 
@@ -267,7 +323,6 @@ footer.footer-top {
     color: #FFE4B5;
     letter-spacing: 1px;
 }
-
 
 /* email logado */
 footer.footer-top .user-info {
@@ -295,6 +350,16 @@ footer.footer-top .user-info .email-logado {
     transform: translateY(-50%);
 }
 
+
+.footer-sair {
+    width: 40px;
+    height: auto;
+    position: absolute;
+    right: 30px;         
+    top: 40%;
+    transform: translateY(-50%);
+}
+
 /* Rodapé */
 footer {
     margin-top: auto;
@@ -308,4 +373,44 @@ footer {
     height: 40px;
     position: relative;
     z-index: 1;
+}
+
+/* =============================== */
+/* SOBRE – alteração solicitada    */
+/* =============================== */
+
+.sobre-container {
+    display: flex;
+    width: 90%;
+    margin: 40px auto;
+    gap: 30px;
+    align-items: center;
+    background: #fff0d9;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* imagem horizontal, sem arredondar */
+.sobre-img {
+    width: 45%;
+    height: auto;
+    border-radius: 0 !important;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.sobre-texto {
+    width: 55%;
+    text-align: justify;
+}
+
+.sobre-texto h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #cc3300;
+}
+
+.sobre-texto p {
+    font-size: 1.3rem;
+    line-height: 1.6;
 }

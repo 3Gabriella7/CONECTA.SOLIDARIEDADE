@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("../patrials/head") %>
+
+<body>
+
+    <footer class="footer-top">
+        <a href="/">
+        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+        <a href="/">
+    <img src="/static/sair.png" alt="Voltar" class="footer-sair">
+</a>
+        </a>
+    </footer>
+    
+    <div class="sub-header">
+
+        <% if (!isAdmin && !isDocente && !isAluno) { %>
+            <a href="/cadastro">CADASTRAR</a>
+            <a href="/login">LOGIN</a>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+
+        <% } else if (isAdmin) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+
+        <% } else if (isDocente) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/doar">ACESSAR CAMPANHAS</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+
+        <% } else if (isAluno) { %>
+            <a href="/info">SOBRE O SITE</a>
+            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+            <a href="/ranking">VER RANKING GERAL</a>
+        <% } %>
+
+    </div>
+        
+  <%- include("../patrials/footer") %>
+
+</body>
+</html>
