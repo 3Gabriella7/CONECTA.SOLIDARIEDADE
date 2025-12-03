@@ -3,110 +3,74 @@
 
 <%- include("../patrials/head") %>
 
-<body>
+    <body>
 
-    <!-- TOPO -->
-    <footer class="footer-top">
-        <a href="/">
-            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-        </a>
+        <!-- TOPO -->
+        <footer class="footer-top">
+            <a href="/">
+                <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+            </a>
 
-        <a href="/">
-            <img src="/static/sair.png" alt="Voltar" class="footer-sair">
-        </a>
-    </footer>
+            <a href="/">
+                <img src="/static/sair.png" alt="Voltar" class="footer-sair">
+            </a>
+        </footer>
 
-    <!-- MENU -->
-    <div class="sub-header">
-        <% if (!isAdmin && !isDocente && !isAluno) { %>
-            <a href="/cadastro">CADASTRAR</a>
-            <a href="/login">LOGIN</a>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+        <!-- MENU -->
+        <div class="sub-header">
+            <% if (!isAdmin && !isDocente && !isAluno) { %>
+                <a href="/cadastro">CADASTRAR</a>
+                <a href="/login">LOGIN</a>
+                <a href="/info">SOBRE O SITE</a>
+                <a href="/cp">CAMPANHAS PARTICIPANTES</a>
 
-        <% } else if (isAdmin) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
-            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+                <% } else if (isAdmin) { %>
+                    <a href="/info">SOBRE O SITE</a>
+                    <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+                    <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+                    <a href="/ediusua">GERENCIAR USUÁRIOS</a>
 
-        <% } else if (isDocente) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/doar">ACESSAR CAMPANHAS</a>
-            <a href="/ranking">VER RANKING GERAL</a>
+                    <% } else if (isDocente) { %>
+                        <a href="/info">SOBRE O SITE</a>
+                        <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+                        <a href="/doar">ACESSAR CAMPANHAS</a>
+                        <a href="/ranking">VER RANKING GERAL</a>
 
-        <% } else if (isAluno) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/ranking">VER RANKING GERAL</a>
-        <% } %>
-    </div>
+                        <% } else if (isAluno) { %>
+                            <a href="/info">SOBRE O SITE</a>
+                            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+                            <a href="/ranking">VER RANKING GERAL</a>
+                            <% } %>
+        </div>
 
-    <main class="campanhas-container">
+        <main class="campanhas-container">
 
-        <h1>CAMPANHAS PARTICIPANTES</h1>
+            <h1>CAMPANHAS PARTICIPANTES</h1>
+            
+            <table>
+                <tr>
+                    <th>Imagem</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                </tr>
 
-        <table>
-            <tr>
-                <td>
-                    <img src="/static/Agasalho.png" alt="Campanha do Agasalho">
-                    <h2>Campanha do Agasalho</h2>
-                </td>
-                <td>
-                    A Campanha do Agasalho mobiliza toda a comunidade escolar para arrecadar roupas, calçados e 
-                    cobertores destinados a pessoas em situação de vulnerabilidade social.  
-                    Além disso, a campanha envolve ações de conscientização sobre empatia, solidariedade e responsabilidade social.  
-                    Todos os itens arrecadados são organizados, triados e encaminhados a instituições parceiras que auxiliam famílias da região.
-                </td>
-            </tr>
+                <% campanhas.forEach(c=> { %>
+                    <tr>
+                        <td><img src="<%= c.imagem %>" width="80"></td>
+                        <td>
+                            <%= c.nome %>
+                        </td>
+                        <td>
+                            <%= c.descricao %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </table>
 
-            <tr>
-                <td>
-                    <img src="/static/Brinquedo.png" alt="Campanha do Brinquedo">
-                    <h2>Campanha do Brinquedo</h2>
-                </td>
-                <td>
-                    A Campanha do Brinquedo incentiva a arrecadação de brinquedos novos ou em bom estado para crianças
-                    atendidas por projetos sociais.  
-                    O objetivo é proporcionar alegria no Natal e em datas comemorativas, mostrando que pequenos gestos 
-                    transformam a realidade de muitas famílias.  
-                    A campanha também conscientiza sobre o valor da generosidade e da cooperação.
-                </td>
-            </tr>
+        </main>
 
-            <tr>
-                <td>
-                    <img src="/static/Alimento.png" alt="Campanha do Alimento">
-                    <h2>Campanha do Alimento</h2>
-                </td>
-                <td>
-                    A Campanha do Alimento arrecada alimentos não perecíveis que são distribuídos em cestas básicas para 
-                    famílias em situação de insegurança alimentar.  
-                    Cada contribuição ajuda diretamente pessoas que enfrentam dificuldades com alimentação, reforçando o 
-                    compromisso social da comunidade.  
-                    Além disso, a iniciativa incentiva reflexão sobre desigualdade e solidariedade.
-                </td>
-            </tr>
+        <%- include("../patrials/footer") %>
 
-            <tr>
-                <td>
-                    <img src="/static/Racao.png" alt="Campanha de Ração para Pets">
-                    <h2>Campanha de Ração para Pets</h2>
-                </td>
-                <td>
-                    A Campanha de Ração para Pets arrecada ração e produtos destinados a animais em situação de abandono 
-                    ou resgatados por ONGs protetoras.  
-                    A iniciativa estimula a empatia e cuidado também com os animais, garantindo alimentação e melhores 
-                    condições de vida para pets resgatados.  
-                    Muitas doações ajudam diretamente abrigos que sobrevivem exclusivamente de apoio comunitário.
-                </td>
-            </tr>
-        </table>
+    </body>
 
-    </main>
-
-    <%- include("../patrials/footer") %>
-
-</body>
 </html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<%- include("../patrials/head") %>
+
+    <body>
+
+        <footer class="footer-top">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+            <div class="titulo-campanha">
+                <span class="titulo-topo">CONECTA</span>
+                <span class="titulo-base">SOLIDARIEDADE</span>
+            </div>
+            <div class="right-footer">
+                <% if (email) { %>
+                    <div class="user-info">
+                        <p class="email-logado">
+                            <%= email %>
+                        </p>
+                        <a href="/logout"><button class="sair-btn">SAIR</button></a>
+                    </div>
+                    <% } %>
+            </div>
+        </footer>
+
+        <center>
+            <div class="page-box">
+                <h1>Doar para <%= campanha.nome %>
+                </h1>
+
+                <main>
+                    <form action="/doar/<%= campanha.id %>" method="POST" class="formItens">
+                        <table>
+
+                            <tr>
+                                <td><img src="<%= campanha.imagem %>" style="max-width:230px;" /></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <select name="item_doado" required>
+                                        <option value="" disabled selected>Selecione o item</option>
+
+                                        <% campanha.itens.forEach(item=> { %>
+                                            <option value="<%= item.nome %>">
+                                                <%= item.nome %> - <%= item.pontos %> ponto(s)
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input type="number" name="quantidade" placeholder="Quantidade" min="1" max="99"
+                                        required>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><input type="date" name="data" required></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input type="text" name="codigo_da_sala" placeholder="Código da Sala" required>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <button type="submit">CONFIRMAR</button><br><br>
+                    </form>
+                </main>
+
+            </div>
+
+            <a href="/doar"><button>VOLTAR</button></a><br><br>
+        </center>
+
+        <%- include("../patrials/footer") %>
+    </body>
+
+</html>

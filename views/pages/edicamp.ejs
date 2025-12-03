@@ -6,26 +6,26 @@
 
     <body class="desfocar">
         <footer class="footer-top">
-        <a href="/">
-        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-        <a href="/">
-    <img src="/static/sair.png" alt="Voltar" class="footer-sair">
-</a>
-        </a>
+            <a href="/">
+                <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+                <a href="/">
+                    <img src="/static/sair.png" alt="Voltar" class="footer-sair">
+                </a>
+            </a>
         </footer>
 
 
 
         <center>
-         <div class="sub-header">
+            <div class="sub-header">
 
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
-            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+                <a href="/info">SOBRE O SITE</a>
+                <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+                <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+                <a href="/ediusua">GERENCIAR USUÁRIOS</a>
 
-        </div>
-            <div class="page-box"><br>     
+            </div>
+            <div class="page-box"><br>
                 <h1>CRIAR CAMPANHAS</h1>
 
                 <% if (mensagem) { %>
@@ -36,49 +36,71 @@
 
                         <form id="formCampanha" action="/edicamp/add" method="POST" enctype="multipart/form-data">
 
-    <table class="camp-table">
+                            <table class="camp-table">
 
-        <tr>
-            <td><label for="nome">Nome da Campanha:</label></td>
-            <td><input type="text" name="nome" id="nome" required></td>
-        </tr>
+                                <tr>
+                                    <td><label for="nome">Nome da Campanha:</label></td>
+                                    <td><input type="text" name="nome" id="nome" required></td>
+                                </tr>
 
-        <tr>
-            <td><label for="descricao">Descrição:</label></td>
-            <td><textarea name="descricao" id="descricao" required></textarea></td>
-        </tr>
+                                <tr>
+                                    <td><label for="descricao">Descrição:</label></td>
+                                    <td><textarea name="descricao" id="descricao" required></textarea></td>
+                                </tr>
 
-        <tr>
-            <td><label for="imagem">Imagem:</label></td>
-            <td><input type="file" name="imagem" id="imagem" accept="image/*" required></td>
-        </tr>
-    </table>
+                                <tr>
+                                    <td><label for="imagem">Imagem (jpeg, jpg ou png):</label></td>
+                                    <td><input type="file" name="imagem" id="imagem" accept=".jpeg, .jpg, .png" required></td>
+                                </tr>
+                            </table>
 
-    <h3 style="color:#ff6600; margin-top:20px;">Itens que podem ser doados:</h3>
+                            <h3 style="color:#ff6600; margin-top:20px;">Itens que podem ser doados:</h3>
 
-    <table id="itensTable" class="itens-table">
+                            <table id="itensTable" class="itens-table">
 
-        <tr>
-            <th>Item</th>
-            <th>Pontos</th>
-            <th></th>
-        </tr>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Pontos</th>
+                                    <th></th>
+                                </tr>
 
-        <tr>
-            <td><input type="text" name="itens[0][nome]" required></td>
-            <td><input type="number" name="itens[0][pontos]" required></td>
-            <td><button type="button" onclick="addItem()">+</button></td>
-        </tr>
-    </table>
+                                <tr>
+                                    <td><input type="text" name="itens[0][nome]" required></td>
+                                    <td>
+                                        <input type="number" name="itens[0][pontos]" required min="1"
+                                            oninput="validarPontos(this)">
+                                    </td>
 
-    <button type="submit">PROSSEGUIR</button>
+                                    <td><button type="button" onclick="addItem()">+</button></td>
+                                </tr>
+                            </table>
 
-</form>
+                            <button type="submit">PROSSEGUIR</button>
 
-            </div>          
-        </center>
+                        </form>
+                        <%- include("../patrials/footer") %>
+                        <script>
+                            function validarPontos(input) {
+                                if (input.value < 1) {
+                                    input.value = 1;
+                                }
+                            }
 
-        <%- include("../patrials/footer") %>
-    </body>
+                            function addItem() {
+                                const tabela = document.getElementById("itensTable");
 
-</html>
+                                // Conta quantos itens já existem
+                                const index = document.querySelectorAll('#itensTable input[name*="[nome]"]').length;
+
+                                const novaLinha = tabela.insertRow();
+
+                                novaLinha.innerHTML = `
+        <td><input type="text" name="itens[${index}][nome]" required></td>
+        <td>
+            <input type="number" name="itens[${index}][pontos]" 
+                   required min="1" oninput="validarPontos(this)">
+        </td>
+        <td><button type="button" onclick="addItem()">+</button></td>
+    `;
+                            }
+                        </script>
