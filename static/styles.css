@@ -79,12 +79,23 @@ a {
     color: inherit;
 }
 
-/* Caso exista button dentro de <a>, remove estilo */
-.sub-header a button,
-a button {
-    all: unset;
+.btn {
+    background: #ebf2ff;
+    color: #cc3300;
+    padding: 7px 18px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
     cursor: pointer;
 }
+
+.btn:hover {
+    background: #f3f3f3;
+}
+
 
 button {
     background: #ebf2ff;                 /* fundo bem claro */
@@ -413,4 +424,70 @@ footer {
 .sobre-texto p {
     font-size: 1.3rem;
     line-height: 1.6;
+}
+/* =============================== */
+/* CAMPANHAS PARTICIPANTES — NOVO DESIGN */
+/* =============================== */
+
+/* Container geral */
+.campanhas-container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+/* Título */
+.campanhas-container h1 {
+    color: #7a0000;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* Tabela com espaçamento entre os cards */
+.campanhas-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 25px;
+}
+
+/* Cada card */
+.campanhas-container td {
+    background: #ffffffee;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    vertical-align: middle;
+}
+
+/* PRIMEIRA COLUNA: imagem + título centralizados */
+.campanhas-container td:first-child {
+    width: 35%;
+    text-align: center;
+}
+
+/* Espaço entre imagem e texto */
+.campanhas-container img {
+    width: 250px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* Título dentro do card */
+.campanhas-container h2 {
+    font-size: 22px;
+    color: #7a0000;
+    margin-bottom: 10px;
+}
+
+/* Texto da descrição com mais informações */
+.campanhas-container td:nth-child(2) {
+    font-size: 16px;
+    text-align: justify;
+    padding-left: 25px;
+    padding-right: 25px;
+    line-height: 1.5;
 }

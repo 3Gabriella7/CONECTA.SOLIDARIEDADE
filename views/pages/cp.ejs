@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <%- include("../patrials/head") %>
 
-   <body class="desfocar">
-         <footer class="footer-top">
-        <a href="/">
-        <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
-        <a href="/">
-    <img src="/static/sair.png" alt="Voltar" class="footer-sair">
-</a>
-        </a>
-        </footer>
-        <center>
-            <div page-box>
-    <div class="sub-header">
+<body>
 
+    <!-- TOPO -->
+    <footer class="footer-top">
+        <a href="/">
+            <img src="/static/maos_logo.png" alt="Logo" class="footer-logo">
+        </a>
+
+        <a href="/">
+            <img src="/static/sair.png" alt="Voltar" class="footer-sair">
+        </a>
+    </footer>
+
+    <!-- MENU -->
+    <div class="sub-header">
         <% if (!isAdmin && !isDocente && !isAluno) { %>
             <a href="/cadastro">CADASTRAR</a>
             <a href="/login">LOGIN</a>
@@ -38,53 +41,72 @@
             <a href="/cp">CAMPANHAS PARTICIPANTES</a>
             <a href="/ranking">VER RANKING GERAL</a>
         <% } %>
-
     </div>
-                <br>
-                <h1>CAMPANHAS PARTICIPANTES:
-                </h1>
-                <table border="1">
-                    <tr>
-                        <td style="text-align:center; font-size: 18px; padding: 10px;">
-                            CAMPANHA DO AGASALHO
-                        </td>
-                        <td style="text-align:justify; font-size: 17px; padding: 10px;">
-                            <img src="/static/Agasalho.png" style="max-width:300px;"><br><br>
-                            A Campanha do Agasalho, realizada pelo SENAI Sumaré, tem como propósito mobilizar a comunidade escolar na arrecadação de roupas e cobertores em bom estado ou novos, destinados a pessoas em situação de vulnerabilidade. Trata-se de uma iniciativa que reforça valores de solidariedade, responsabilidade social e compromisso coletivo, demonstrando que a união de esforços pode gerar impacto significativo na vida de muitos.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td name="nome" style="text-align:center; font-size: 18px; padding: 10px;">
-                            CAMPANHA DO BRINQUEDO
-                        </td>
-                        <td style="text-align:justify; font-size: 17px; padding: 10px;">
-                            <img src="/static/Brinquedo.png" style="max-width:300px;" name="imagem"><br><br>
-                            <p name="descrição">A Campanha do Brinquedo, promovida pelo SENAI Sumaré, tem como objetivo arrecadar brinquedos novos ou em bom estado para crianças em situação de vulnerabilidade. A iniciativa busca incentivar a solidariedade e o espírito de colaboração entre alunos e docentes, proporcionando alegria e esperança às crianças atendidas e reforçando o compromisso social da instituição.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center; font-size: 18px; padding: 10px;">
-                            CAMPANHA DO ALIMENTO
-                        </td>
-                        <td style="text-align:justify; font-size: 17px; padding: 10px;">
-                            <img src="/static/Alimento.png" style="max-width:300px;"><br><br>
-                            A Campanha do Alimento, organizada pelo SENAI Sumaré, visa a arrecadação de alimentos não perecíveis para apoiar famílias em situação de vulnerabilidade. A ação incentiva a participação ativa de alunos e docentes, fortalecendo a consciência solidária e promovendo o impacto positivo da comunidade escolar na vida daqueles que mais necessitam.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center; font-size: 18px; padding: 10px;">
-                            CAMPANHA DE RAÇÃO PARA PETS
-                        </td>
-                        <td style="text-align:justify; font-size: 17px; padding: 10px;">
-                            <img src="/static/Racao.png" style="max-width:300px;"><br><br>
-                            A Campanha de Ração para Pets, realizada pelo SENAI Sumaré, tem como objetivo arrecadar alimentos para animais em situação de abandono ou vulnerabilidade. A iniciativa busca envolver alunos e docentes, promovendo cuidado e responsabilidade social, além de reforçar a importância da solidariedade também para os animais da comunidade.
-                        </td>
-                    </tr>
-                </table>
-            </div>
 
-        </center>
-        <%- include("../patrials/footer") %>
-    </body>
+    <main class="campanhas-container">
 
+        <h1>CAMPANHAS PARTICIPANTES</h1>
+
+        <table>
+            <tr>
+                <td>
+                    <img src="/static/Agasalho.png" alt="Campanha do Agasalho">
+                    <h2>Campanha do Agasalho</h2>
+                </td>
+                <td>
+                    A Campanha do Agasalho mobiliza toda a comunidade escolar para arrecadar roupas, calçados e 
+                    cobertores destinados a pessoas em situação de vulnerabilidade social.  
+                    Além disso, a campanha envolve ações de conscientização sobre empatia, solidariedade e responsabilidade social.  
+                    Todos os itens arrecadados são organizados, triados e encaminhados a instituições parceiras que auxiliam famílias da região.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img src="/static/Brinquedo.png" alt="Campanha do Brinquedo">
+                    <h2>Campanha do Brinquedo</h2>
+                </td>
+                <td>
+                    A Campanha do Brinquedo incentiva a arrecadação de brinquedos novos ou em bom estado para crianças
+                    atendidas por projetos sociais.  
+                    O objetivo é proporcionar alegria no Natal e em datas comemorativas, mostrando que pequenos gestos 
+                    transformam a realidade de muitas famílias.  
+                    A campanha também conscientiza sobre o valor da generosidade e da cooperação.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img src="/static/Alimento.png" alt="Campanha do Alimento">
+                    <h2>Campanha do Alimento</h2>
+                </td>
+                <td>
+                    A Campanha do Alimento arrecada alimentos não perecíveis que são distribuídos em cestas básicas para 
+                    famílias em situação de insegurança alimentar.  
+                    Cada contribuição ajuda diretamente pessoas que enfrentam dificuldades com alimentação, reforçando o 
+                    compromisso social da comunidade.  
+                    Além disso, a iniciativa incentiva reflexão sobre desigualdade e solidariedade.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img src="/static/Racao.png" alt="Campanha de Ração para Pets">
+                    <h2>Campanha de Ração para Pets</h2>
+                </td>
+                <td>
+                    A Campanha de Ração para Pets arrecada ração e produtos destinados a animais em situação de abandono 
+                    ou resgatados por ONGs protetoras.  
+                    A iniciativa estimula a empatia e cuidado também com os animais, garantindo alimentação e melhores 
+                    condições de vida para pets resgatados.  
+                    Muitas doações ajudam diretamente abrigos que sobrevivem exclusivamente de apoio comunitário.
+                </td>
+            </tr>
+        </table>
+
+    </main>
+
+    <%- include("../patrials/footer") %>
+
+</body>
 </html>
