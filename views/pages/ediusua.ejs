@@ -16,31 +16,22 @@
     
     <div class="sub-header">
 
-        <% if (!isAdmin && !isDocente && !isAluno) { %>
-            <a href="/cadastro">CADASTRAR</a>
-            <a href="/login">LOGIN</a>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
 
-        <% } else if (isAdmin) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/edicamp">GERENCIAR CAMPANHAS</a>
-            <a href="/ediusua">GERENCIAR USUÁRIOS</a>
-
-        <% } else if (isDocente) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/doar">ACESSAR CAMPANHAS</a>
-            <a href="/ranking">VER RANKING GERAL</a>
-
-        <% } else if (isAluno) { %>
-            <a href="/info">SOBRE O SITE</a>
-            <a href="/cp">CAMPANHAS PARTICIPANTES</a>
-            <a href="/ranking">VER RANKING GERAL</a>
-        <% } %>
-
+        <a href="/info">SOBRE O SITE</a>
+        <a href="/cp">CAMPANHAS PARTICIPANTES</a>
+        <a href="/edicamp">GERENCIAR CAMPANHAS</a>
+        <a href="/ediusua">GERENCIAR USUÁRIOS</a>
+    
     </div>
+
+    <CENTER>
+        <div class="page-box"><br>
+
+            <h1>GERENCIAR USUÁRIOS</h1>
+
+
+            </form></CENTER>
+
         
   <%- include("../patrials/footer") %>
 

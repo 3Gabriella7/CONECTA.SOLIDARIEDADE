@@ -92,6 +92,8 @@ app.use((req, res, next) => {
 // ROTAS PÚBLICAS
 // ---------------------------------------------------------
 app.get("/", (req, res) => {
+
+    // 🔥 ALTERAÇÃO 1: PEGAR A MENSAGEM DA SESSÃO
     const mensagem = req.session.mensagem || null;
     req.session.mensagem = null;
 
@@ -263,12 +265,30 @@ app.get("/edicamp", (req, res) => {
 app.post("/edicamp/add", upload.single("imagem"), (req, res) => {
     const { nome, descricao } = req.body;
 
-    const itensBrutos = req.body.itens || {};
-    const itensArray = Object.values(itensBrutos);
-    const itensJSON = JSON.stringify(itensArray);
+    let itensFinal = [];
 
-    if (!nome || !descricao || itensArray.length === 0)
+    if (req.body.itens) {
+        Object.keys(req.body.itens).forEach(index => {
+            const item = req.body.itens[index];
+
+            if (item.nome && item.pontos) {
+                itensFinal.push({
+                    nome: item.nome,
+                    pontos: Number(item.pontos)
+                });
+            }
+        });
+    }
+
+    if (itensFinal.length === 0) {
+        return res.redirect("/edicamp?mensagem=Preencha todos os itens");
+    }
+
+    const itensJSON = JSON.stringify(itensFinal);
+
+    if (!nome || !descricao) {
         return res.redirect("/edicamp?mensagem=Preencha todos os campos");
+    }
 
     const imagem = req.file ? "/static/uploads/" + req.file.filename : null;
 
@@ -278,24 +298,52 @@ app.post("/edicamp/add", upload.single("imagem"), (req, res) => {
         VALUES (?, ?, ?, ?)
         `,
         [nome, descricao, imagem, itensJSON],
-        () => {
+        (err) => {
+            if (err) {
+                console.log("ERRO AO INSERIR:", err);
+                return res.redirect("/edicamp?mensagem=Erro ao salvar a campanha");
+            }
+
+            // 🔥 ALTERAÇÃO 2: ENVIAR MENSAGEM PARA O INDEX
             req.session.mensagem = "Campanha criada com sucesso!";
             res.redirect("/");
         }
     );
 });
 
-app.post("/edicamp/delete/:id", (req, res) => {
-    db.run("DELETE FROM campanhas WHERE id=?", [req.params.id], () => {
-        res.redirect("/edicamp?mensagem=Campanha excluída");
+// LISTAR USUÁRIOS
+app.get("/ediusua", (req, res) => {
+    db.all("SELECT * FROM cadastro", (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.send("Erro ao buscar usuários");
+        }
+
+        res.render("pages/ediusua", {
+    listaUsuarios: rows,
+    isAdmin: req.session.user && req.session.user.tipo === "Admin",
+    isDocente: req.session.user && req.session.user.tipo === "Docente",
+    isAluno: req.session.user && req.session.user.tipo === "Aluno"
+});
+
     });
 });
 
-// Gerenciar usuários
-app.get("/ediusua", (req, res) => {
-    if (!res.locals.isAdmin) return res.redirect("/");
-    res.render("pages/ediusua");
+
+// EXCLUIR USUÁRIO
+app.post("/ediusua/delete/:id", (req, res) => {
+    const { id } = req.params;
+
+    db.run("DELETE FROM cadastro WHERE id = ?", [id], (err) => {
+        if (err) {
+            console.log(err);
+            return res.send("Erro ao deletar usuário");
+        }
+
+        res.redirect("/ediusua");
+    });
 });
+
 
 // ---------------------------------------------------------
 // PÁGINAS EXTRAS

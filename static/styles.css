@@ -491,3 +491,67 @@ footer {
     padding-right: 25px;
     line-height: 1.5;
 }
+
+/* =============================== */
+/* TABELA DE USUÁRIOS              */
+/* =============================== */
+
+.usuarios-container {
+    width: 95%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffffcc;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+}
+
+.usuarios-container h1 {
+    text-align: center;
+    color: #7a0000;
+    margin-bottom: 20px;
+}
+
+.usuarios-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffffcc;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.usuarios-table th,
+.usuarios-table td {
+    padding: 14px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    font-size: 1rem;
+}
+
+.usuarios-table th {
+    background: #f8f9fa;
+    color: #7a0000;
+    font-weight: 700;
+}
+
+.usuarios-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Botão de excluir */
+.btn-excluir {
+    background: #ffb3b3;
+    color: #7a0000;
+    padding: 7px 15px;
+    border-radius: 10px;
+    border: 1px solid #dca0a0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-excluir:hover {
+    background: #ff8c8c;
+}
+
